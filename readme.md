@@ -1,6 +1,10 @@
 # ThumbDox
 
-The ThumbDox is a (WIP) split keyboard based on the [ErgoDox](https://www.ergodox.io/).  My aims in producing it:
+The ThumbDox is a (WIP) split keyboard based on the [ErgoDox](https://www.ergodox.io/).
+
+![img](docs/design/images/thumbdox_LHS.png)
+
+My aims in producing ThumbDox:
 
 1.  Eliminate the many keys I do not use.
 2.  Retain the two 2u thumb keys, in their current position, which are very comfortable for me to use.
