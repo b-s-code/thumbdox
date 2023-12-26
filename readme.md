@@ -2,7 +2,7 @@
 
 The ThumbDox is a (WIP) split keyboard based on the [ErgoDox](https://www.ergodox.io/).
 
-![img](docs/design/images/thumbdox_LHS.png)
+![img](docs/design/images/thumbdox_shaved.png)
 
 My aims in producing ThumbDox:
 
