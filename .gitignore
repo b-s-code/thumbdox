@@ -1,3 +1,6 @@
 # Not interesting in checking in the Python virtual environment used
 # for designing the 3D model.
 venv/
+
+# Vim swap files.
+*.swp
