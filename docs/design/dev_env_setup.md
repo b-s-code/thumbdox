@@ -26,3 +26,16 @@ $ python3 -m venv ./venv
 $ ./venv/bin/python3 -m pip install -r requirements.txt
 ```
 
+## Actual development steps
+
+### Editing the 3D model source
+
+The source code for the 3D model is `3D_model/model.py`.  Editing that Python file is necessary to change the model (it is not intended that the generated OpenSCAD code be manually written to).
+
+### Compiling the 3D model source to OpenSCAD code
+
+`$ ./venv/bin/python3 3D_model/model.py`
+
+### Viewing the rendered OpenSCAD code
+
+`$ openscad 3D_model/model.scad`
