@@ -58,8 +58,13 @@ class keyholecolumn:
 switch_plate = cube(500, 500, 5)
 
 # Cut holes out of switch plate.
-#switch_plate -= keyholecolumn(num_keys=4, cut_depth=6).subtrahend()
-switch_plate -= keyholecolumn(num_keys=4, cut_depth=6).subtrahend().translate(0,0,-0.5)
+z_offset = -0.5 # Prevent z-fighting.
+switch_plate -= keyholecolumn(num_keys=4, cut_depth=6).subtrahend().translate(0, 0, z_offset)
+switch_plate -= keyholecolumn(num_keys=4, cut_depth=6).subtrahend().translate(0, keydata.cap_space_width, z_offset)
+switch_plate -= keyholecolumn(num_keys=4, cut_depth=6).subtrahend().translate(0, 2 * keydata.cap_space_width, z_offset)
+switch_plate -= keyholecolumn(num_keys=4, cut_depth=6).subtrahend().translate(0, 3 * keydata.cap_space_width, z_offset)
+# Intentionally one less 1U key in innermost column, to make room for thumb keys.
+switch_plate -= keyholecolumn(num_keys=3, cut_depth=6).subtrahend().translate(0, 4 * keydata.cap_space_width, z_offset)
 
 model = switch_plate 
 model.save_as_scad()
