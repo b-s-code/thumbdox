@@ -59,7 +59,7 @@ class switch_hole_column:
             the column's keyswitch holes would look like.
         """
         cap_w = keydata.cap_width
-        cap_h = cap_w # Probably not.
+        cap_h = cap_w / 2 # Made up value.  Accuracy matters little here.
         space_w = keydata.cap_space_width
         prisms = [
             cube(cap_w, cap_w, cap_h) \
@@ -114,7 +114,7 @@ class switch_hole_thumb_cluster:
             visualise whether switch hole positions imply keycap collisions.
         """
         cap_w = keydata.cap_width
-        cap_h = cap_w # Probably not.
+        cap_h = cap_w / 2 # Made up value.  Accuracy matters little here.
         space_w = keydata.cap_space_width
         prisms = [
             cube(cap_w * 2, cap_w, cap_h) \
