@@ -89,21 +89,19 @@ difference() {
 		}
 		translate(v = [67, 89, -0.3]) {
 			rotate(a = [0, 0, -30]) {
-				translate(v = [0, 0, -0.3]) {
-					union() {
-						cube(size = [0, 0, 0]);
-						translate(v = [-11.0, -2.0, 0]) {
-							cube(size = [36, 18, 9.0]);
-						}
-						translate(v = [-11.0, 17.05, 0]) {
-							cube(size = [36, 18, 9.0]);
-						}
+				union() {
+					cube(size = [0, 0, 0]);
+					translate(v = [-11.0, -2.0, 0]) {
+						cube(size = [36, 18, 9.0]);
+					}
+					translate(v = [-11.0, 17.05, 0]) {
+						cube(size = [36, 18, 9.0]);
 					}
 				}
 			}
 		}
 	}
-	translate(v = [1.5, 0, -0.5]) {
+	translate(v = [1.5, 0.0, -0.5]) {
 		union() {
 			cube(size = [0, 0, 0]);
 			translate(v = [0.0, 0, 0]) {
@@ -187,15 +185,13 @@ difference() {
 	}
 	translate(v = [67, 89, -0.5]) {
 		rotate(a = [0, 0, -30]) {
-			translate(v = [0, 0, -0.5]) {
-				union() {
-					cube(size = [0, 0, 0]);
-					translate(v = [0, 0.0, 0]) {
-						cube(size = [14, 14, 7]);
-					}
-					translate(v = [0, 19.05, 0]) {
-						cube(size = [14, 14, 7]);
-					}
+			union() {
+				cube(size = [0, 0, 0]);
+				translate(v = [0, 0.0, 0]) {
+					cube(size = [14, 14, 6]);
+				}
+				translate(v = [0, 19.05, 0]) {
+					cube(size = [14, 14, 6]);
 				}
 			}
 		}
