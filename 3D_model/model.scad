@@ -196,4 +196,12 @@ difference() {
 			}
 		}
 	}
+	translate(v = [90, -35, -0.5]) {
+		cube(size = [100, 90, 6]);
+	}
+	translate(v = [90, 55, -0.5]) {
+		rotate(a = [0, 0, -30]) {
+			cube(size = [100, 200, 6]);
+		}
+	}
 }

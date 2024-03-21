@@ -10,6 +10,7 @@ class tuning:
           - thumb cluster vertical position
           - thumb cluster rotation
         All lengths in mm, all angles in degrees.
+        Left hand side data only.
     """
     col_vert_offsets = {
             "pinky"       : 1.5,
@@ -149,6 +150,7 @@ class switch_hole_thumb_cluster:
 def make_key_switch_holes(z_offset):
     """ Returns a list of solidpython objects, each of which should
         be subtracted from the switch plate to create a keyhole.
+        Left hand side only.
     """
     subtrahends = [
         # Pinky column.
@@ -196,7 +198,8 @@ def make_key_switch_holes(z_offset):
 
 def make_keycaps(z_offset):
     """ Returns a list of solidpython objects, each of which should
-        be added to the switch plate to create a keycap.
+        be added to the switch plate to create a keycap.  Left hand
+        side only.
     """
     # Group everything we're going to render above the switch plate together.
     addends = [
@@ -235,6 +238,23 @@ def make_keycaps(z_offset):
                     z_offset)]
     return addends
 
+def plate_subtractions(depth, z_offset):
+    """ Returns a list of solidpython objects, to be subtracted
+        from the initial rectangular switch plate, to give it
+        smaller dimension and less trivial shape.  Left hand side
+        only.
+    """
+    cutouts = [
+            # Bottom left.
+            cube(100, 90, depth).translate(90, -35, z_offset),
+            # Bottom middle.
+            cube(100, 200, depth)
+            .rotate(0, 0, tuning.thumb_data["angle"])
+            .translate(90, 55, z_offset)
+            # TODO : continue shaping switch plate here.
+            ]
+    return cutouts
+
 def make_switch_plate(render_keycaps=False):
     """ Returns a solidpython object representing the switch plate
         (left hand side only), with holes cut for all key switches.
@@ -264,7 +284,15 @@ def make_switch_plate(render_keycaps=False):
     # Punch holes in plate for key switches to sit in.
     for cutout in make_key_switch_holes(z_offset_holes):
         switch_plate -= cutout
-    
+   
+    # Prevent z-fighting.
+    z_offset_plate_deductions = -0.5
+
+    z_plate_deduction_depth = 6
+    # Cut edges of plate closer to keys.
+    for subtrahend in plate_subtractions(z_plate_deduction_depth, z_offset_plate_deductions):
+        switch_plate -= subtrahend
+
     return switch_plate
 
 model = make_switch_plate(render_keycaps=True)
