@@ -147,10 +147,10 @@ def make_key_switch_holes(z_offset):
     """
     subtrahends = [
         # Pinky column.
-        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()\
+        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
                 .translate(tuning.pinky_col_vert_offset, 0, z_offset),
         # Ring finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()\
+        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
                 .translate(tuning.ring_col_vert_offset, keydata.cap_space_width, z_offset),
         # Middle finger column.
         switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
@@ -172,10 +172,10 @@ def make_keycaps(z_offset):
     # Group everything we're going to render above the switch plate together.
     addends = [
         # Pinky column.
-        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()\
+        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
                 .translate(tuning.pinky_col_vert_offset, 0, z_offset),
         # Ring finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()\
+        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
                 .translate(tuning.ring_col_vert_offset, keydata.cap_space_width, z_offset),
         # Middle finger column.
         switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
