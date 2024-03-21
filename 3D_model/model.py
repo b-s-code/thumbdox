@@ -9,16 +9,19 @@ class tuning:
           - thumb cluster horizontal position
           - thumb cluster vertical position
           - thumb cluster rotation
+        All lengths in mm, all angles in degrees.
     """
-    # Unit is mm.
     col_vert_offsets = {
             "pinky"       : 1.5,
             "ring"        : -1.5,
             "middle"      : -3,
             "outer_index" : -1.5,
             "inner_index" : 0}
-
-    # TODO : thumb cluster data
+    thumb_data = {
+            "horiz_position" : 89,
+            "vert_position"  : 67,
+            "angle"  : -30 
+            }
 
 class keydata:
     """ Stores data related to a 1U MX keycap and switch.
@@ -150,21 +153,45 @@ def make_key_switch_holes(z_offset):
     subtrahends = [
         # Pinky column.
         switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(tuning.col_vert_offsets["pinky"], 0, z_offset),
+                .translate(
+                    tuning.col_vert_offsets["pinky"],
+                    0 * keydata.cap_space_width,
+                    z_offset),
         # Ring finger column.
         switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(tuning.col_vert_offsets["ring"], keydata.cap_space_width, z_offset),
+                .translate(
+                    tuning.col_vert_offsets["ring"],
+                    1 * keydata.cap_space_width,
+                    z_offset),
         # Middle finger column.
         switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(tuning.col_vert_offsets["middle"], 2 * keydata.cap_space_width, z_offset),
+                .translate(
+                    tuning.col_vert_offsets["middle"],
+                    2 * keydata.cap_space_width,
+                    z_offset),
         # Outer index finger column.
         switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(tuning.col_vert_offsets["outer_index"], 3 * keydata.cap_space_width, z_offset),
-        # Intentionally one less 1U key in innermost column, to make room for thumb keys.
+                .translate(
+                    tuning.col_vert_offsets["outer_index"],
+                    3 * keydata.cap_space_width,
+                    z_offset),
+        # Intentionally one less 1U key in innermost column,
+        # to make room for thumb keys.
         switch_hole_column(num_keys=3, cut_depth=6).subtrahend()
-                .translate(tuning.col_vert_offsets["inner_index"], 4 * keydata.cap_space_width, z_offset),
+                .translate(
+                    tuning.col_vert_offsets["inner_index"],
+                    4 * keydata.cap_space_width,
+                    z_offset),
         # Cut holes out of switch plate for 2X 2U thumb keys.
-        switch_hole_thumb_cluster(cut_depth=7).subtrahend().translate(0, 0, z_offset).rotate(0,0,-30).translate(67,89,z_offset)]
+        switch_hole_thumb_cluster(cut_depth=6).subtrahend()
+                .rotate(
+                    0,
+                    0,
+                    tuning.thumb_data["angle"])
+                .translate(
+                    tuning.thumb_data["vert_position"],
+                    tuning.thumb_data["horiz_position"],
+                    z_offset)]
     return subtrahends
 
 def make_keycaps(z_offset):
@@ -178,18 +205,34 @@ def make_keycaps(z_offset):
                 .translate(tuning.col_vert_offsets["pinky"], 0, z_offset),
         # Ring finger column.
         switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["ring"], keydata.cap_space_width, z_offset),
+                .translate(tuning.col_vert_offsets["ring"],
+                           keydata.cap_space_width,
+                           z_offset),
         # Middle finger column.
         switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["middle"], 2 * keydata.cap_space_width, z_offset),
+                .translate(tuning.col_vert_offsets["middle"],
+                           2 * keydata.cap_space_width,
+                           z_offset),
         # Outer index finger column.
         switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["outer_index"], 3 * keydata.cap_space_width, z_offset),
+                .translate(tuning.col_vert_offsets["outer_index"],
+                           3 * keydata.cap_space_width,
+                           z_offset),
         # Inner index finger column.
         switch_hole_column(num_keys=3, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["inner_index"], 4 * keydata.cap_space_width, z_offset),
+                .translate(tuning.col_vert_offsets["inner_index"],
+                           4 * keydata.cap_space_width,
+                           z_offset),
         # Thumb cluster keys.
-        switch_hole_thumb_cluster(cut_depth=1).keycaps_above().translate(0, 0, z_offset).rotate(0,0,-30).translate(67,89,z_offset)]
+        switch_hole_thumb_cluster(cut_depth=1).keycaps_above()
+                .rotate(
+                    0,
+                    0,
+                    tuning.thumb_data["angle"])
+                .translate(
+                    tuning.thumb_data["vert_position"],
+                    tuning.thumb_data["horiz_position"],
+                    z_offset)]
     return addends
 
 def make_switch_plate(render_keycaps=False):
