@@ -146,10 +146,6 @@ def make_key_switch_holes(z_offset):
         be subtracted from the switch plate to create a keyhole.
     """
     subtrahends = [
-#    ring_col_vert_offset = 0
-#    middle_col_vert_offset = 0
-#    outer_index_vert_offset = 0
-#    inner_index_vert_offset = 0
         # Pinky column.
         switch_hole_column(num_keys=4, cut_depth=6).subtrahend()\
                 .translate(tuning.pinky_col_vert_offset, 0, z_offset),
