@@ -5,7 +5,7 @@ difference() {
 				cube(size = [500, 500, 5]);
 			}
 		}
-		translate(v = [0, 0, -0.3]) {
+		translate(v = [1.5, 0, -0.3]) {
 			union() {
 				cube(size = [0, 0, 0]);
 				translate(v = [-2.0, -2, 0]) {
@@ -22,7 +22,7 @@ difference() {
 				}
 			}
 		}
-		translate(v = [0, 19.05, -0.3]) {
+		translate(v = [-1.5, 19.05, -0.3]) {
 			union() {
 				cube(size = [0, 0, 0]);
 				translate(v = [-2.0, -2, 0]) {
@@ -39,7 +39,7 @@ difference() {
 				}
 			}
 		}
-		translate(v = [0, 38.1, -0.3]) {
+		translate(v = [-3, 38.1, -0.3]) {
 			union() {
 				cube(size = [0, 0, 0]);
 				translate(v = [-2.0, -2, 0]) {
@@ -56,7 +56,7 @@ difference() {
 				}
 			}
 		}
-		translate(v = [0, 57.150000000000006, -0.3]) {
+		translate(v = [-1.5, 57.150000000000006, -0.3]) {
 			union() {
 				cube(size = [0, 0, 0]);
 				translate(v = [-2.0, -2, 0]) {
@@ -103,7 +103,7 @@ difference() {
 			}
 		}
 	}
-	translate(v = [0, 0, -0.5]) {
+	translate(v = [1.5, 0, -0.5]) {
 		union() {
 			cube(size = [0, 0, 0]);
 			translate(v = [0.0, 0, 0]) {
@@ -120,7 +120,7 @@ difference() {
 			}
 		}
 	}
-	translate(v = [0, 19.05, -0.5]) {
+	translate(v = [-1.5, 19.05, -0.5]) {
 		union() {
 			cube(size = [0, 0, 0]);
 			translate(v = [0.0, 0, 0]) {
@@ -137,7 +137,7 @@ difference() {
 			}
 		}
 	}
-	translate(v = [0, 38.1, -0.5]) {
+	translate(v = [-3, 38.1, -0.5]) {
 		union() {
 			cube(size = [0, 0, 0]);
 			translate(v = [0.0, 0, 0]) {
@@ -154,7 +154,7 @@ difference() {
 			}
 		}
 	}
-	translate(v = [0, 57.150000000000006, -0.5]) {
+	translate(v = [-1.5, 57.150000000000006, -0.5]) {
 		union() {
 			cube(size = [0, 0, 0]);
 			translate(v = [0.0, 0, 0]) {
