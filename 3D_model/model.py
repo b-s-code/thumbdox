@@ -251,7 +251,7 @@ def make_switch_plate(render_keycaps=False):
     # switch holes.
     # TODO : tune the size, shape, position of the minuend of the
     # switch plate.
-    switch_plate = cube(500, 500, 5).translate(-50, -50, 0).color('red')
+    switch_plate = cube(150, 170, 5).translate(-25, -25, 0).color('red')
    
     # Prevent z-fighting.
     z_offset_holes = -0.5
