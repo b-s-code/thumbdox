@@ -117,7 +117,7 @@ class switch_hole_thumb_cluster:
         cap_h = cap_w # Probably not.
         space_w = keydata.cap_space_width
         prisms = [
-                cube(cap_w * 2, cap_w, cap_h) \
+            cube(cap_w * 2, cap_w, cap_h) \
             .translate(-2 - (cap_w / 2), i * space_w - 2, 0) \
             for i in range(self.num_keys)]
 
