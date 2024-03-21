@@ -12,10 +12,10 @@ class tuning:
     """
     # Unit is mm.
     col_vert_offsets = {
-            "pinky"       : 0,
-            "ring"        : 0,
-            "middle"      : 0,
-            "outer_index" : 0,
+            "pinky"       : 1.5,
+            "ring"        : -1.5,
+            "middle"      : -3,
+            "outer_index" : -1.5,
             "inner_index" : 0}
 
     # TODO : thumb cluster data
