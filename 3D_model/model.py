@@ -1,299 +1,189 @@
 from solid2 import cube
+from enum import Enum
 
-def emptysolid():
-    return cube(0, 0, 0)
+# START TYPES
+PartType = Enum('PartType', ['plate',  'spacer', 'base'])
 
-class tuning:
-    """ Stores tuning data related to:
-          - key column vertical offsets
-          - thumb cluster horizontal position
-          - thumb cluster vertical position
-          - thumb cluster rotation
-        All lengths in mm, all angles in degrees.
-        Left hand side data only.
-    """
-    col_vert_offsets = {
-            "pinky"       : 1.5,
-            "ring"        : -1.5,
-            "middle"      : -3,
-            "outer_index" : -1.5,
-            "inner_index" : 0}
-    thumb_data = {
-            "horiz_position" : 89,
-            "vert_position"  : 67,
-            "angle"  : -30 
-            }
+class ColumnParams:
+    def __init__(
+            self,
+            x_offset_mm: float,
+            numkeys : int,
+            key_length_U: int):
+        """ The trivial constructor. """
+        self.x_offset_mm = x_offset_mm
+        self.numkeys = numkeys
+        self.key_length_U = key_length_U
 
-class keydata:
-    """ Stores data related to a 1U MX keycap and switch.
-        Sources: 
-          - https://youtu.be/7azQkSu0m_U?t=71
-          - https://www.cherry-world.com/cherry-mx/developer
-    """
-    cap_width = 18 # mm.  Switch manufacturer data states 18.5mm.
-                   # We'll use the number obtained from someone 
-                   # who actually prints switch plates instead.
-    cap_space_width = 19.05 # mm.
-    switch_hole_width = 14 # mm.
-    switch_hole_separation = 5.05 # mm, apart.
+class ColumnGroupParams:
+    def __init__(
+            self,
+            top_padding_mm: float,
+            bottom_padding_mm: float,
+            left_padding_mm: float,
+            right_padding_mm: float,
+            x_start_pos: float,
+            y_start_pos: float,
+            rotation_CW_degrees: float):
+        """ The trivial constructor. """
+        self.top_padding_mm = top_padding_mm  
+        self.bottom_padding_mm = bottom_padding_mm
+        self.left_padding_mm = left_padding_mm
+        self.right_padding_mm = right_padding_mm
+        self.x_start_pos = x_start_pos
+        self.y_start_pos = y_start_pos
+        self.rotation_CW_degrees = rotation_CW_degrees
 
-class switch_hole_column:
-    """ A column of disjoint rectangular prisms that can be subtracted from a
-        switch plate to form the keyswitch holes for an entire column of keys
-        Successive keys are placed along the x-axis.  The collection of prisms
-        will be one keycap space wide along the y-axis. It is expected that
-        the switch holes will be punched out of the switch plate parallel to
-        the z-axis.
-    """
+class ColumnGroup:
+    def __init__(
+            self,
+            column_group_params: ColumnGroupParams,
+            columns_params: list[ColumnParams]):
+        """ The trivial constructor. """
+        self.column_group_params = column_group_params
+        self.columns_params = columns_params
 
-    def __init__(self, num_keys=3, cut_depth=5):
-        """ Keyword arguments:
-        num_keys -- the number of keys to put in the column.
-        cut_depth -- how deep, in millimetres, to cut each keyswitch hole.
-                     Should be no less than the thickness of switch plate.
+class Part:
+    def __init__(
+            self,
+            thickness_mm: float,
+            column_groups: list[ColumnGroup],
+            part_type: PartType):
+        """ The trivial constructor. """
+        self.thickness_mm = thickness_mm
+        self.column_groups = column_groups
+        self.part_type = part_type
+# END TYPES
 
-        Default values are fairly aribitrary.
-        """
-        self.cut_depth = cut_depth
-        self.num_keys = num_keys 
+def build_part() -> Part:
+    """ Returns a Part that can be rendered.
+        The Part is built up in a manually-specified
+        sequence from hardcoded values inside this function.
 
-    def subtrahend(self):
-        """ Returns a sum of rectangular prisms.
-            This prism sum can be taken away from a switch plate to
-            cut the holes needed for a key column's keyswitch holes.
-        """
-        hole_w = keydata.switch_hole_width
-        space_w = keydata.cap_space_width
-        prisms = [
-            cube(hole_w, hole_w, self.cut_depth) \
-            .translate(i * space_w, 0, 0)   \
-            for i in range(self.num_keys)]
+        The implicit config schema could be made into a UI, and
+        the logic for sequentially creating the components of the
+        Part could be left in this function.
 
-        # Seems we can't just sum the list of prisms.  Do things the long way.
-        prism_sum = emptysolid()
-        for prism in prisms:
-            prism_sum += prism
-        return prism_sum
-
-    def keycaps_above(self):
-        """ Returns a very rough approximation of what the keycaps above
-            the column's keyswitch holes would look like.
-        """
-        cap_w = keydata.cap_width
-        cap_h = cap_w / 2 # Made up value.  Accuracy matters little here.
-        space_w = keydata.cap_space_width
-        prisms = [
-            cube(cap_w, cap_w, cap_h) \
-            .translate(i * space_w - 2, -2, 0) \
-            for i in range(self.num_keys)]
-
-        prism_sum = emptysolid()
-        for prism in prisms:
-            prism_sum += prism
-        return prism_sum
-
-class switch_hole_thumb_cluster:
-    """ A pair of disjoint rectangular prisms that can be subtracted from a
-        switch plate to form the keyswitch holes for two 2U thumb keys.
-        Successive keys are placed along the y-axis.  The collection of prisms
-        will be two keycap spaces wide along the x-axis. It is expected that
-        the switch holes will be punched out of the switch plate parallel to
-        the z-axis.  The subtrahend exposed will not be rotated w.r.t. axes.
+        But for now we live with a pile of hardcoded values,
+        variables, constructor calls, and implicit sequencing.
     """
 
-    def __init__(self, cut_depth=5):
-        """ Keyword arguments:
-        cut_depth -- how deep, in millimetres, to cut each keyswitch hole.
-                     Should be no less than the thickness of switch plate.
+    # START FINGER COLUMN GROUP
+    # Actual input data for finger columns.
+    # Order: pinky, ring, middle, inner index, outer index
+    finger_cols_num_cols = 5
+    finger_col_x_offsets_mm: list[float] = [
+            0.0, 3.0, 4.5, 3.0, 1.5]
+    finger_col_nums_keys : list[int] = [4, 4, 4, 4, 3]
+    finger_col_key_lengths_U : list[int] = [
+            1 for i in range(finger_cols_num_cols)]
 
-        Default value is fairly aribitrary.
-        """
-        self.cut_depth = cut_depth
-        self.num_keys = 2 
+    # Actual input data for finger column group.
+    finger_col_gp_top_padding_mm: float = 0.0
+    finger_col_gp_bottom_padding_mm: float = 0.0
+    finger_col_gp_left_padding_mm: float = 0.0
+    finger_col_gp_right_padding_mm: float = 0.0
+    finger_col_gp_x_start_pos: float = 0.0
+    finger_col_gp_y_start_pos: float = 0.0
+    finger_col_gp_rotation_CW_degrees: float = 0.0
 
-    def subtrahend(self):
-        """ Returns a sum of rectangular prisms.
-            This prism sum can be taken away from a switch plate to
-            cut the holes needed for the thumb cluster's keyswitch holes.
-        """
-        hole_w = keydata.switch_hole_width
-        space_w = keydata.cap_space_width
-        prisms = [
-            cube(hole_w, hole_w, self.cut_depth) \
-            .translate(0, i * space_w, 0)   \
-            for i in range(self.num_keys)]
-
-        # Seems we can't just sum the list of prisms.  Do things the long way.
-        prism_sum = emptysolid()
-        for prism in prisms:
-            prism_sum += prism
-        return prism_sum
-    
-    def keycaps_above(self):
-        """ Returns a very rough approximation of what the keycaps above
-            the thumb cluster's keyswitch holes would look like.  Helps
-            visualise whether switch hole positions imply keycap collisions.
-        """
-        cap_w = keydata.cap_width
-        cap_h = cap_w / 2 # Made up value.  Accuracy matters little here.
-        space_w = keydata.cap_space_width
-        prisms = [
-            cube(cap_w * 2, cap_w, cap_h) \
-            .translate(-2 - (cap_w / 2), i * space_w - 2, 0) \
-            for i in range(self.num_keys)]
-
-        prism_sum = emptysolid()
-        for prism in prisms:
-            prism_sum += prism
-        return prism_sum
-
-def make_key_switch_holes(z_offset):
-    """ Returns a list of solidpython objects, each of which should
-        be subtracted from the switch plate to create a keyhole.
-        Left hand side only.
-    """
-    subtrahends = [
-        # Pinky column.
-        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(
-                    tuning.col_vert_offsets["pinky"],
-                    0 * keydata.cap_space_width,
-                    z_offset),
-        # Ring finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(
-                    tuning.col_vert_offsets["ring"],
-                    1 * keydata.cap_space_width,
-                    z_offset),
-        # Middle finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(
-                    tuning.col_vert_offsets["middle"],
-                    2 * keydata.cap_space_width,
-                    z_offset),
-        # Outer index finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).subtrahend()
-                .translate(
-                    tuning.col_vert_offsets["outer_index"],
-                    3 * keydata.cap_space_width,
-                    z_offset),
-        # Intentionally one less 1U key in innermost column,
-        # to make room for thumb keys.
-        switch_hole_column(num_keys=3, cut_depth=6).subtrahend()
-                .translate(
-                    tuning.col_vert_offsets["inner_index"],
-                    4 * keydata.cap_space_width,
-                    z_offset),
-        # Cut holes out of switch plate for 2X 2U thumb keys.
-        switch_hole_thumb_cluster(cut_depth=6).subtrahend()
-                .rotate(
-                    0,
-                    0,
-                    tuning.thumb_data["angle"])
-                .translate(
-                    tuning.thumb_data["vert_position"],
-                    tuning.thumb_data["horiz_position"],
-                    z_offset)]
-    return subtrahends
-
-def make_keycaps(z_offset):
-    """ Returns a list of solidpython objects, each of which should
-        be added to the switch plate to create a keycap.  Left hand
-        side only.
-    """
-    # Group everything we're going to render above the switch plate together.
-    addends = [
-        # Pinky column.
-        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["pinky"], 0, z_offset),
-        # Ring finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["ring"],
-                           keydata.cap_space_width,
-                           z_offset),
-        # Middle finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["middle"],
-                           2 * keydata.cap_space_width,
-                           z_offset),
-        # Outer index finger column.
-        switch_hole_column(num_keys=4, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["outer_index"],
-                           3 * keydata.cap_space_width,
-                           z_offset),
-        # Inner index finger column.
-        switch_hole_column(num_keys=3, cut_depth=6).keycaps_above()
-                .translate(tuning.col_vert_offsets["inner_index"],
-                           4 * keydata.cap_space_width,
-                           z_offset),
-        # Thumb cluster keys.
-        switch_hole_thumb_cluster(cut_depth=1).keycaps_above()
-                .rotate(
-                    0,
-                    0,
-                    tuning.thumb_data["angle"])
-                .translate(
-                    tuning.thumb_data["vert_position"],
-                    tuning.thumb_data["horiz_position"],
-                    z_offset)]
-    return addends
-
-def plate_subtractions(depth, z_offset):
-    """ Returns a list of solidpython objects, to be subtracted
-        from the initial rectangular switch plate, to give it
-        smaller dimension and less trivial shape.  Left hand side
-        only.
-    """
-    cutouts = [
-            # Bottom left.
-            cube(100, 90, depth).translate(90, -35, z_offset),
-            # Bottom middle.
-            cube(100, 200, depth)
-            .rotate(0, 0, tuning.thumb_data["angle"])
-            .translate(90, 55, z_offset)
-            # TODO : continue shaping switch plate here.
+    # Make objects out of input data.
+    finger_columns_params: list[ColumnParams] = [
+            ColumnParams(
+                finger_col_x_offsets_mm[i],
+                finger_col_nums_keys[i],
+                finger_col_key_lengths_U[i]
+                ) for i in range(finger_cols_num_cols)
             ]
-    return cutouts
+    finger_column_group_params = ColumnGroupParams(
+            finger_col_gp_top_padding_mm,
+            finger_col_gp_bottom_padding_mm,
+            finger_col_gp_left_padding_mm,
+            finger_col_gp_right_padding_mm,
+            finger_col_gp_x_start_pos,
+            finger_col_gp_y_start_pos,
+            finger_col_gp_rotation_CW_degrees)
+    finger_column_group = ColumnGroup(
+            finger_column_group_params,
+            finger_columns_params)
+    # END FINGER COLUMN GROUP
 
-def make_switch_plate(render_keycaps=False):
-    """ Returns a solidpython object representing the switch plate
-        (left hand side only), with holes cut for all key switches.
-
-    Keyword arguments:
-    render_keycaps -- turn on when tuning keyhole positions,
-                      so can be guaranteed no keycaps collide.
-                      Turn off when rendering final switch plate
-                      for export to a printable format.
-    """
-    # Make uncut switch plate.
-    # Initial position and dimensions are arbitrarily large.
-    # Just need a big enough canvas to work with while arranging
-    # switch holes.
-    # TODO : tune the size, shape, position of the minuend of the
-    # switch plate.
-    switch_plate = cube(150, 170, 5).translate(-25, -25, 0).color('red')
-   
-    # Prevent z-fighting.
-    z_offset_holes = -0.5
-    z_offset_keycaps = -0.3
+    # START THUMB COLUMN GROUP
+    # Actual input data for thumb columns.
+    # Order: inner thumb, outer thumb
+    thumb_cols_num_cols = 2
+    thumb_col_x_offsets_mm: list[float] = [0.0, 0.0]
+    thumb_col_nums_keys : list[int] = [1, 1]
+    thumb_col_key_lengths_U : list[int] = [
+            2 for i in range(thumb_cols_num_cols)]
     
-    if (render_keycaps):
-        for addend in make_keycaps(z_offset_keycaps):
-            switch_plate += addend
+    # Actual input data for thumb column group.
+    thumb_col_gp_top_padding_mm: float = 0.0
+    thumb_col_gp_bottom_padding_mm: float = 0.0
+    thumb_col_gp_left_padding_mm: float = 0.0
+    thumb_col_gp_right_padding_mm: float = 0.0
+    thumb_col_gp_x_start_pos: float = 300.0 # Needs tuning
+    thumb_col_gp_y_start_pos: float = 300.0
+    thumb_col_gp_rotation_CW_degrees: float = 45.0
 
-    # Punch holes in plate for key switches to sit in.
-    for cutout in make_key_switch_holes(z_offset_holes):
-        switch_plate -= cutout
-   
-    # Prevent z-fighting.
-    z_offset_plate_deductions = -0.5
+    # Make objects out of input data.
+    thumb_columns_params: list[ColumnParams] = [
+            ColumnParams(
+                thumb_col_x_offsets_mm[i],
+                thumb_col_nums_keys[i],
+                thumb_col_key_lengths_U[i]
+                ) for i in range(thumb_cols_num_cols)
+            ]
+    thumb_column_group_params = ColumnGroupParams(
+            thumb_col_gp_top_padding_mm,
+            thumb_col_gp_bottom_padding_mm,
+            thumb_col_gp_left_padding_mm,
+            thumb_col_gp_right_padding_mm,
+            thumb_col_gp_x_start_pos,
+            thumb_col_gp_y_start_pos,
+            thumb_col_gp_rotation_CW_degrees)
+    thumb_column_group = ColumnGroup(
+            thumb_column_group_params,
+            thumb_columns_params)
+    # END THUMB COLUMN GROUP
 
-    z_plate_deduction_depth = 6
-    # Cut edges of plate closer to keys.
-    for subtrahend in plate_subtractions(z_plate_deduction_depth, z_offset_plate_deductions):
-        switch_plate -= subtrahend
+    # START PART
+    
+    # Actual input data for thumb column group.
+    part_thickness_mm: float = 4
+    part_type: PartType = 'plate'
+    
+    # Order of these is not important.
+    part_column_groups: list[ColumnGroup] = [finger_column_group, thumb_column_group]
 
-    return switch_plate
+    # Make objects out of input data.
+    part: Part = Part(
+            part_thickness_mm,
+            part_type,
+            part_column_groups)
+    # END PART
 
-model = make_switch_plate(render_keycaps=True)
-model.save_as_scad()
+    return part
+
+# TODO : delete this dummy call.  It was just for error checking.
+build_part()
+
+# 
+# # START UTILITY FUNCTIONS
+# def render(part: Part) ->  _OpenSCADObject:
+#     minuend = render_minuend(part.column_groups)
+#     subtrahend = render_subtrahend(part)
+#     return minuend - subtrahend
+# 
+# def render_minuend(column_groups: list[ColumnGroup]) -> _OpenSCADObject:
+#     # TODO
+# 
+# def render_minuend(part: Part) -> _OpenSCADObject:
+#     # TODO
+# # END UTILITY FUNCTIONS
+# 
+# def main():
+#     """ Disobeying convention here while throwing things together.
+#     """
+#     model = render(build_part())
+#     model.save_as_scad()
