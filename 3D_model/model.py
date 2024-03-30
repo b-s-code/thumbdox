@@ -68,7 +68,7 @@ def build_part() -> Part:
         variables, constructor calls, and implicit sequencing.
     """
 
-    # START FINGER COLUMN GROUP
+    # START HARDCODED CONFIGURATION
     # Actual input data for finger columns.
     # Order: pinky, ring, middle, inner index, outer index
     finger_cols_num_cols = 5
@@ -87,7 +87,29 @@ def build_part() -> Part:
     finger_col_gp_y_start_pos: float = 0.0
     finger_col_gp_rotation_CW_degrees: float = 0.0
 
-    # Make objects out of input data.
+    # Actual input data for thumb columns.
+    # Order: inner thumb, outer thumb
+    thumb_cols_num_cols = 2
+    thumb_col_x_offsets_mm: list[float] = [0.0, 0.0]
+    thumb_col_nums_keys : list[int] = [1, 1]
+    thumb_col_key_lengths_U : list[int] = [
+            2 for i in range(thumb_cols_num_cols)]
+    
+    # Actual input data for thumb column group.
+    thumb_col_gp_top_padding_mm: float = 0.0
+    thumb_col_gp_bottom_padding_mm: float = 0.0
+    thumb_col_gp_left_padding_mm: float = 0.0
+    thumb_col_gp_right_padding_mm: float = 0.0
+    thumb_col_gp_x_start_pos: float = 300.0 # Needs tuning
+    thumb_col_gp_y_start_pos: float = 300.0
+    thumb_col_gp_rotation_CW_degrees: float = 45.0
+    
+    # Actual input data for part.
+    part_thickness_mm: float = 4
+    part_type: PartType = 'plate'
+    # END HARDCODED CONFIGURATION
+
+    # Process all config.
     finger_columns_params: list[ColumnParams] = [
             ColumnParams(
                 finger_col_x_offsets_mm[i],
@@ -106,27 +128,6 @@ def build_part() -> Part:
     finger_column_group = ColumnGroup(
             finger_column_group_params,
             finger_columns_params)
-    # END FINGER COLUMN GROUP
-
-    # START THUMB COLUMN GROUP
-    # Actual input data for thumb columns.
-    # Order: inner thumb, outer thumb
-    thumb_cols_num_cols = 2
-    thumb_col_x_offsets_mm: list[float] = [0.0, 0.0]
-    thumb_col_nums_keys : list[int] = [1, 1]
-    thumb_col_key_lengths_U : list[int] = [
-            2 for i in range(thumb_cols_num_cols)]
-    
-    # Actual input data for thumb column group.
-    thumb_col_gp_top_padding_mm: float = 0.0
-    thumb_col_gp_bottom_padding_mm: float = 0.0
-    thumb_col_gp_left_padding_mm: float = 0.0
-    thumb_col_gp_right_padding_mm: float = 0.0
-    thumb_col_gp_x_start_pos: float = 300.0 # Needs tuning
-    thumb_col_gp_y_start_pos: float = 300.0
-    thumb_col_gp_rotation_CW_degrees: float = 45.0
-
-    # Make objects out of input data.
     thumb_columns_params: list[ColumnParams] = [
             ColumnParams(
                 thumb_col_x_offsets_mm[i],
@@ -145,23 +146,13 @@ def build_part() -> Part:
     thumb_column_group = ColumnGroup(
             thumb_column_group_params,
             thumb_columns_params)
-    # END THUMB COLUMN GROUP
-
-    # START PART
-    
-    # Actual input data for thumb column group.
-    part_thickness_mm: float = 4
-    part_type: PartType = 'plate'
-    
     # Order of these is not important.
-    part_column_groups: list[ColumnGroup] = [finger_column_group, thumb_column_group]
-
-    # Make objects out of input data.
+    part_column_groups: list[ColumnGroup] = [
+            finger_column_group, thumb_column_group]
     part: Part = Part(
             part_thickness_mm,
             part_type,
             part_column_groups)
-    # END PART
 
     return part
 
