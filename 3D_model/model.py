@@ -1,3 +1,4 @@
+from solid2.core.builtins.openscad_primitives import _OpenSCADObject
 from solid2 import cube
 from enum import Enum
 
@@ -39,8 +40,17 @@ class ColumnGroup:
             self,
             column_group_params: ColumnGroupParams,
             columns_params: list[ColumnParams]):
-        """ The trivial constructor. """
+        """ Does some error checking. """
         self.column_group_params = column_group_params
+        smallest_column_x_offset  = min([
+            col_params.x_offset_mm for col_params in columns_params])
+        if smallest_column_x_offset < 0.0:
+            msg = "Column x-offsets should always be non-negative."
+            raise ValueError(msg)
+        if smallest_column_x_offset > 0.0:
+            # This is to simplify padding calculations etc.
+            msg = "At least one column x-offset is always expected to be zero."
+            raise ValueError(msg)
         self.columns_params = columns_params
 
 class Part:
@@ -162,14 +172,23 @@ build_part()
 # 
 # # START UTILITY FUNCTIONS
 # def render(part: Part) ->  _OpenSCADObject:
-#     minuend = render_minuend(part.column_groups)
+#     minuend = render_minuend(part)
 #     subtrahend = render_subtrahend(part)
 #     return minuend - subtrahend
 # 
-# def render_minuend(column_groups: list[ColumnGroup]) -> _OpenSCADObject:
-#     # TODO
+def render_minuend(part: Part) -> _OpenSCADObject:
+    """ Invariant w.r.t. part type. Exploits the fact we're just
+        rendering one rectangular prism with no holes for each
+        column group.
+    """
+    # TODO
+    minuend: _OpenSCADObject = cube(0, 0, 0)
+    for column_group in part.column_groups:
+        minuend += render_minuend_column_group(column_group)
+    return minuend 
+
 # 
-# def render_minuend(part: Part) -> _OpenSCADObject:
+# def render_subtrahend(part: Part) -> _OpenSCADObject:
 #     # TODO
 # # END UTILITY FUNCTIONS
 # 
