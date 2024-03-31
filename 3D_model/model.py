@@ -192,7 +192,8 @@ def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
         column_length_mm: float = (column_params.numkeys 
                                    * column_params.key_length_U
                                    * MX_Key.keycap_space_side_length_mm)
-        x_length_required_mm: float = column_length_mm + column_params.x_offset_mm
+        x_length_required_mm: float = (column_length_mm
+                                       + column_params.x_offset_mm)
         columns_x_lengths_required_mm.append(x_length_required_mm)
     column_group_x_length_required_mm:float = (
         max(columns_x_lengths_required_mm)
@@ -201,19 +202,22 @@ def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
 
     # Determine y side length of the resultant.
     num_cols = len(column_group.columns_params)
-    column_group_y_length_required_mm: float = num_cols * MX_Key.keycap_space_side_length_mm 
+    column_group_y_length_required_mm: float = (num_cols
+        * MX_Key.keycap_space_side_length_mm) 
 
     # Determine z side length of the resultant.
     thickness_mm: float = part.thickness_mm
    
-    # We now understand enough to construct the untransformed minuend for this column group.
+    # We now understand enough to construct the untransformed minuend for this 
+    # column group.
     object_space_resultant: _OpenSCADObject = cube(
             column_group_x_length_required_mm,
             column_group_y_length_required_mm,
             thickness_mm)
     
     # I expect that rotation before translation will be more useful.
-    # TODO : check if this rotation is clockwise around positive z-axis, like I assume.
+    # TODO : check if this rotation is clockwise around positive z-axis,
+    # like I assume.
     world_space_resultant: _OpenSCADObject = (object_space_resultant
         .rotateZ(column_group.column_group_params.rotation_CW_degrees)
         .translate(column_group.column_group_params.x_start_pos,
