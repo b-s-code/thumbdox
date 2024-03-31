@@ -63,6 +63,12 @@ class Part:
         self.thickness_mm = thickness_mm
         self.column_groups = column_groups
         self.part_type = part_type
+
+class MX_Key:
+    switch_hole_side_length_mm = 14
+    keycap_side_length_mm = 18
+    # Provides breathing space between keycaps.
+    keycap_space_side_length_mm = 19.05
 # END TYPES
 
 def build_part() -> Part:
@@ -83,7 +89,7 @@ def build_part() -> Part:
     # Order: pinky, ring, middle, inner index, outer index
     finger_cols_num_cols = 5
     finger_col_x_offsets_mm: list[float] = [
-            0.0, 3.0, 4.5, 3.0, 1.5]
+            4.5, 1.5, 0.0, 1.5, 3.0]
     finger_col_nums_keys : list[int] = [4, 4, 4, 4, 3]
     finger_col_key_lengths_U : list[int] = [
             1 for i in range(finger_cols_num_cols)]
@@ -161,13 +167,10 @@ def build_part() -> Part:
             finger_column_group, thumb_column_group]
     part: Part = Part(
             part_thickness_mm,
-            part_type,
-            part_column_groups)
+            part_column_groups,
+            part_type)
 
     return part
-
-# TODO : delete this dummy call.  It was just for error checking.
-build_part()
 
 # 
 # # START UTILITY FUNCTIONS
@@ -176,6 +179,49 @@ build_part()
 #     subtrahend = render_subtrahend(part)
 #     return minuend - subtrahend
 # 
+
+def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
+    """ Returns one rectangular prism, transformed into world space,
+        according to the ColumnGroup's ColumnGroupParams
+    """
+    column_group: ColumnGroup = part.column_groups[i]
+
+    # Determine x side length of the resultant.
+    columns_x_lengths_required_mm: list[float] = []
+    for column_params in column_group.columns_params:
+        column_length_mm: float = (column_params.numkeys 
+                                   * column_params.key_length_U
+                                   * MX_Key.keycap_space_side_length_mm)
+        x_length_required_mm: float = column_length_mm + column_params.x_offset_mm
+        columns_x_lengths_required_mm.append(x_length_required_mm)
+    column_group_x_length_required_mm:float = (
+        max(columns_x_lengths_required_mm)
+        + column_group.column_group_params.top_padding_mm
+        + column_group.column_group_params.bottom_padding_mm)
+
+    # Determine y side length of the resultant.
+    num_cols = len(column_group.columns_params)
+    column_group_y_length_required_mm: float = num_cols * MX_Key.keycap_space_side_length_mm 
+
+    # Determine z side length of the resultant.
+    thickness_mm: float = part.thickness_mm
+   
+    # We now understand enough to construct the untransformed minuend for this column group.
+    object_space_resultant: _OpenSCADObject = cube(
+            column_group_x_length_required_mm,
+            column_group_y_length_required_mm,
+            thickness_mm)
+    
+    # I expect that rotation before translation will be more useful.
+    # TODO : check if this rotation is clockwise around positive z-axis, like I assume.
+    world_space_resultant: _OpenSCADObject = (object_space_resultant
+        .rotateZ(column_group.column_group_params.rotation_CW_degrees)
+        .translate(column_group.column_group_params.x_start_pos,
+                   column_group.column_group_params.y_start_pos,
+                   0))
+
+    return world_space_resultant
+
 def render_minuend(part: Part) -> _OpenSCADObject:
     """ Invariant w.r.t. part type. Exploits the fact we're just
         rendering one rectangular prism with no holes for each
@@ -183,9 +229,13 @@ def render_minuend(part: Part) -> _OpenSCADObject:
     """
     # TODO
     minuend: _OpenSCADObject = cube(0, 0, 0)
-    for column_group in part.column_groups:
-        minuend += render_minuend_column_group(column_group)
-    return minuend 
+    num_column_groups: int = range(len(part.column_groups))
+    for i in num_column_groups:
+        minuend += render_minuend_column_group(part, i)
+    return minuend
+
+# TODO : delete this dummy call.  It was just for error checking.
+render_minuend(build_part())
 
 # 
 # def render_subtrahend(part: Part) -> _OpenSCADObject:
