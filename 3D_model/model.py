@@ -174,11 +174,13 @@ def build_part() -> Part:
 
 # 
 # # START UTILITY FUNCTIONS
-# def render(part: Part) ->  _OpenSCADObject:
-#     minuend = render_minuend(part)
+def render(part: Part) ->  _OpenSCADObject:
+    minuend = render_minuend(part)
 #     subtrahend = render_subtrahend(part)
 #     return minuend - subtrahend
-# 
+    return minuend # TODO : remove this temp. return,
+                   # used for diagnostics on minuend renderer.
+
 
 def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
     """ Returns one rectangular prism, transformed into world space,
@@ -234,8 +236,10 @@ def render_minuend(part: Part) -> _OpenSCADObject:
     # TODO
     minuend: _OpenSCADObject = cube(0, 0, 0)
     num_column_groups: int = range(len(part.column_groups))
+    # Finger column group minuend in red, thumb column group minuend in blue.
+    colors = ('red', 'blue')
     for i in num_column_groups:
-        minuend += render_minuend_column_group(part, i)
+        minuend += render_minuend_column_group(part, i).color(colors[i])
     return minuend
 
 # TODO : delete this dummy call.  It was just for error checking.
@@ -246,8 +250,9 @@ render_minuend(build_part())
 #     # TODO
 # # END UTILITY FUNCTIONS
 # 
-# def main():
-#     """ Disobeying convention here while throwing things together.
-#     """
-#     model = render(build_part())
-#     model.save_as_scad()
+def main():
+    """ Disobeying convention here while throwing things together.
+    """
+    model = render(build_part())
+    model.save_as_scad()
+main()
