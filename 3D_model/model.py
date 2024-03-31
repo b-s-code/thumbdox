@@ -116,8 +116,8 @@ def build_part() -> Part:
     thumb_col_gp_bottom_padding_mm: float = 0.0
     thumb_col_gp_left_padding_mm: float = 0.0
     thumb_col_gp_right_padding_mm: float = 0.0
-    thumb_col_gp_x_start_pos: float = 300.0 # Needs tuning
-    thumb_col_gp_y_start_pos: float = 300.0
+    thumb_col_gp_x_start_pos: float = 100.0 # TODO : Needs tuning.
+    thumb_col_gp_y_start_pos: float = 100.0 # TODO : Needs tuning.
     thumb_col_gp_rotation_CW_degrees: float = 45.0
     
     # Actual input data for part.

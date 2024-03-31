@@ -8,7 +8,7 @@ union() {
 		}
 	}
 	color(alpha = 1.0, c = "blue") {
-		translate(v = [300.0, 300.0, 0]) {
+		translate(v = [100.0, 100.0, 0]) {
 			rotate(a = [0, 0, 45.0]) {
 				cube(size = [38.1, 38.1, 4]);
 			}
