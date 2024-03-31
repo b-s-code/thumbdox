@@ -16,5 +16,11 @@ difference() {
 			}
 		}
 	}
-	cube(size = [0, 0, 0]);
+	color(alpha = 1.0, c = "green") {
+		translate(v = [2.5250000000000004, 2.5250000000000004, 0]) {
+			translate(v = [0, 0, -2.5]) {
+				cube(size = [14, 14, 9]);
+			}
+		}
+	}
 }

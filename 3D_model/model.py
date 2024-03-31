@@ -238,24 +238,78 @@ def render_minuend(part: Part) -> _OpenSCADObject:
         minuend += render_minuend_column_group(part, i).color(colors[i])
     return minuend
 
+def render_subtrahend_plate(part: Part):
+    """ Returns an almagamation of (nearly always disjoint) prisms, to be
+        punched out of the switch plate.  This removal of material creates
+        holes for all key switches in all column groups.  Gives subtrahend
+        for LHS of the keyboard only.
+
+        The returned object has been transformed into world space.
+    """
+
+    # Accumulator for the sum of world space ColumnGroup hole prism matrices.
+    subtrahend: _OpenSCADObject = cube(0, 0, 0)
+
+    # Define a prism representing one key switch hole.  The prism is transformed
+    # within the object space of the key's entire space (i.e. in MX key systems,
+    # the 19.05mm by 19.05mm square), to be centered within the key's entire space.
+    hole_side_length: float = MX_Key.switch_hole_side_length_mm
+    # Prevent z-fighting with plate.
+    z_buffer_mm: float = 5
+    hole_prism_uncentered: _OpenSCADObject = (cube(
+        hole_side_length,hole_side_length,
+        part.thickness_mm + z_buffer_mm)
+        .translate(0, 0, -z_buffer_mm / 2))
+    # Center hole within key space.  Colour the hole for visibility against plate.
+    offset_mm: float = (MX_Key.keycap_space_side_length_mm - MX_Key.switch_hole_side_length_mm) / 2
+    hole_prism_centered = hole_prism_uncentered.translate(offset_mm, offset_mm, 0).color('green')
+
+    # For each ColumnGroup.
+    # TODO TODO TODO TODO TODO
+        # Get a list of the top-LHS corner of each key in the ColumnGroup.
+        # Each key corner is represented as a translation from the origin.
+        # (This is where each column's user-specified vertical offset is
+        #  dealt with, as well as each column's implicit horizontal offset.
+
+        # (Accumulate transformed key switch holes.)
+        # switch_hole_matrix: _OpenSCADObject = ...
+        # For as many keys as there are in the ColumnGroup.
+
+            # Transform a new hole_prism into object space of the keyboard
+            # half.
+    
+        # Get the world translation of the ColumnGroup.
+        # Apply it to the accumulated switch_hole_matrix.
+        # (This is where ColumnGroup padding is dealt with.)
+
+   
+    # TODO : delete dummy return value.
+    return hole_prism_centered
+
+    return subtrahend
+
 def render_subtrahend(part: Part) -> _OpenSCADObject:
-   """ Varies w.r.t. part type.  Returns a (nearly always disjoint)
-       amalgamation of prism to be subtracted from the part
+    """ Varies w.r.t. part type.
+ 
+        Returned object is either:
+          - a disjoint amalgamation of rectangular prisms representing
+            the volumes to punch out of the switch plate to create holes
+            for all key switches in all column groups,
+          - one big prismic volume to punch out of the spacer to make its
+            space, or
+          - very little, in the case of the base plate.
+ 
+        The returned object has been transformed into world space.
+    """
+    if part.part_type == "plate":
+        return render_subtrahend_plate(part)
+#    elif part.part_type == "spacer":
+#        # TODO : write a function to deal with this.
+#    elif part.part_type == "base":
+#        # TODO : write a function to deal with this.
+    else:
+        raise ValueError
 
-       Returned object is either:
-         - a disjoint amalgamation of rectangular prisms representing
-           the volumes to punch out of the switch plate to create holes
-           for all key switches in all column groups,
-         - one big prismic volume to punch out of the spacer to make its
-           space, or
-         - very little, in the case of the base plate.
-
-       The returned object has been transformed into world space.
-   """
-   # TODO : write this function and subroutines.
-
-   # TODO : remove dummy value.
-   return cube(0,0,0)
 # # END UTILITY FUNCTIONS
  
 def main():
