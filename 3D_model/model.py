@@ -40,7 +40,7 @@ class ColumnGroup:
             self,
             column_group_params: ColumnGroupParams,
             columns_params: list[ColumnParams]):
-        """ Does some error checking. """
+        """ Not just the trivial constructor.  Does some error checking. """
         self.column_group_params = column_group_params
         smallest_column_x_offset  = min([
             col_params.x_offset_mm for col_params in columns_params])
@@ -48,7 +48,8 @@ class ColumnGroup:
             msg = "Column x-offsets should always be non-negative."
             raise ValueError(msg)
         if smallest_column_x_offset > 0.0:
-            # This is to simplify padding calculations etc.
+            # This constraint on the configuration UI is to simplify padding
+            # calculations for the column groups.
             msg = "At least one column x-offset is always expected to be zero."
             raise ValueError(msg)
         self.columns_params = columns_params
@@ -72,16 +73,8 @@ class MX_Key:
 # END TYPES
 
 def build_part() -> Part:
-    """ Returns a Part that can be rendered.
-        The Part is built up in a manually-specified
-        sequence from hardcoded values inside this function.
-
-        The implicit config schema could be made into a UI, and
-        the logic for sequentially creating the components of the
-        Part could be left in this function.
-
-        But for now we live with a pile of hardcoded values,
-        variables, constructor calls, and implicit sequencing.
+    """ Returns a Part that can be rendered.  The Part is built up in a
+        manually-specified sequence from hardcoded values inside this function.
     """
 
     # START HARDCODED CONFIGURATION
@@ -174,16 +167,16 @@ def build_part() -> Part:
 
 # # START UTILITY FUNCTIONS
 def render(part: Part) ->  _OpenSCADObject:
-    minuend = render_minuend(part)
-#     subtrahend = render_subtrahend(part)
-#     return minuend - subtrahend
-    return minuend # TODO : remove this temp. return,
+    """ The highest-level render function. """
+    return render_minuend(part) - render_subtrahend(part)
+    return minuend - subtrahend
+#    return minuend # TODO : remove this temp. return,
                    # used for diagnostics on minuend renderer.
 
 
 def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
     """ Returns one rectangular prism, transformed into world space,
-        according to the ColumnGroup's ColumnGroupParams
+        according to the ColumnGroup's ColumnGroupParams.
     """
     column_group: ColumnGroup = part.column_groups[i]
 
@@ -234,6 +227,8 @@ def render_minuend(part: Part) -> _OpenSCADObject:
     """ Invariant w.r.t. part type. Exploits the fact we're just
         rendering one rectangular prism per column group with no
         holes in it.
+        
+        The returned object has been transformed into world space.
     """
     minuend: _OpenSCADObject = cube(0, 0, 0)
     num_column_groups: int = range(len(part.column_groups))
@@ -243,8 +238,24 @@ def render_minuend(part: Part) -> _OpenSCADObject:
         minuend += render_minuend_column_group(part, i).color(colors[i])
     return minuend
 
-# def render_subtrahend(part: Part) -> _OpenSCADObject:
-#     # TODO : write this function and subroutines.
+def render_subtrahend(part: Part) -> _OpenSCADObject:
+   """ Varies w.r.t. part type.  Returns a (nearly always disjoint)
+       amalgamation of prism to be subtracted from the part
+
+       Returned object is either:
+         - a disjoint amalgamation of rectangular prisms representing
+           the volumes to punch out of the switch plate to create holes
+           for all key switches in all column groups,
+         - one big prismic volume to punch out of the spacer to make its
+           space, or
+         - very little, in the case of the base plate.
+
+       The returned object has been transformed into world space.
+   """
+   # TODO : write this function and subroutines.
+
+   # TODO : remove dummy value.
+   return cube(0,0,0)
 # # END UTILITY FUNCTIONS
  
 def main():
