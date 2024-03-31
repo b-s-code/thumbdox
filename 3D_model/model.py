@@ -172,7 +172,6 @@ def build_part() -> Part:
 
     return part
 
-# 
 # # START UTILITY FUNCTIONS
 def render(part: Part) ->  _OpenSCADObject:
     minuend = render_minuend(part)
@@ -230,10 +229,9 @@ def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
 
 def render_minuend(part: Part) -> _OpenSCADObject:
     """ Invariant w.r.t. part type. Exploits the fact we're just
-        rendering one rectangular prism with no holes for each
-        column group.
+        rendering one rectangular prism per column group with no
+        holes in it.
     """
-    # TODO
     minuend: _OpenSCADObject = cube(0, 0, 0)
     num_column_groups: int = range(len(part.column_groups))
     # Finger column group minuend in red, thumb column group minuend in blue.
@@ -242,14 +240,10 @@ def render_minuend(part: Part) -> _OpenSCADObject:
         minuend += render_minuend_column_group(part, i).color(colors[i])
     return minuend
 
-# TODO : delete this dummy call.  It was just for error checking.
-render_minuend(build_part())
-
-# 
 # def render_subtrahend(part: Part) -> _OpenSCADObject:
-#     # TODO
+#     # TODO : write this function and subroutines.
 # # END UTILITY FUNCTIONS
-# 
+ 
 def main():
     """ Disobeying convention here while throwing things together.
     """
