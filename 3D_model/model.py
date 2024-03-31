@@ -217,10 +217,10 @@ def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
             thickness_mm)
     
     # I expect that rotation before translation will be more useful.
-    # TODO : check if this rotation is clockwise around positive z-axis,
-    # like I assume.
+    # We flip the sign of the rotation so that a clockwise rotation
+    # about the positive z-axis does actually result.
     world_space_resultant: _OpenSCADObject = (object_space_resultant
-        .rotateZ(column_group.column_group_params.rotation_CW_degrees)
+        .rotateZ(-column_group.column_group_params.rotation_CW_degrees)
         .translate(column_group.column_group_params.x_start_pos,
                    column_group.column_group_params.y_start_pos,
                    0))
