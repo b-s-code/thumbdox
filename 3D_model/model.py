@@ -162,7 +162,7 @@ def build_part() -> Part:
     thumb_column_group = ColumnGroup(
             thumb_column_group_params,
             thumb_columns_params)
-    # Order of these is not important.
+    # Ordering of these two column groups is not important.
     part_column_groups: list[ColumnGroup] = [
             finger_column_group, thumb_column_group]
     part: Part = Part(
@@ -203,8 +203,11 @@ def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
 
     # Determine y side length of the resultant.
     num_cols = len(column_group.columns_params)
-    column_group_y_length_required_mm: float = (num_cols
-        * MX_Key.keycap_space_side_length_mm) 
+    column_group_y_length_required_mm: float = (
+        num_cols
+        * MX_Key.keycap_space_side_length_mm
+        + column_group.column_group_params.left_padding_mm
+        + column_group.column_group_params.right_padding_mm) 
 
     # Determine z side length of the resultant.
     thickness_mm: float = part.thickness_mm
