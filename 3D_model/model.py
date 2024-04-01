@@ -270,9 +270,10 @@ def render_subtrahend_plate(part: Part):
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
 
-    # Define a prism representing one key switch hole.  The prism is transformed
-    # within the object space of the key's entire space (i.e. in MX key systems,
-    # the 19.05mm by 19.05mm square), to be centered within the key's entire space.
+    # Define a prism representing one key switch hole.  The prism is
+    # transformed within the object space of the key's entire space (i.e. in MX
+    # key systems, the 19.05mm by 19.05mm square), to be centered within the
+    # key's entire space.
     hole_side_length: float = MX_Key.switch_hole_side_length_mm
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
@@ -281,9 +282,13 @@ def render_subtrahend_plate(part: Part):
         hole_side_length,
         part.thickness_mm + z_buffer_mm)
         .translate(0, 0, -z_buffer_mm / 2))
-    # Center hole within key space.  Colour the hole for visibility against plate.
-    offset_mm: float = (MX_Key.keycap_space_side_length_mm - MX_Key.switch_hole_side_length_mm) / 2
-    hole_prism_centered = hole_prism_uncentered.translate(offset_mm, offset_mm, 0).color('green')
+    # Center hole within key space.  Colour the hole for visibility against
+    # plate.
+    offset_mm: float = (MX_Key.keycap_space_side_length_mm
+        - MX_Key.switch_hole_side_length_mm) / 2
+    hole_prism_centered = (hole_prism_uncentered
+                           .translate(offset_mm, offset_mm, 0)
+                           .color('green'))
 
     for column_group in part.column_groups:
         switch_hole_matrix: _OpenSCADObject = cube(0, 0, 0)
@@ -301,12 +306,11 @@ def render_subtrahend_plate(part: Part):
                                 .column_group_params
                                 .left_padding_mm)
             for row_index in range(column.numkeys):
-                adjustment_for_long_keys_mm: float = ((
-                        MX_Key.keycap_space_side_length_mm
-                        * column.key_length_U
-                        - hole_side_length)
-                        / 2
-                        - (MX_Key.keycap_space_side_length_mm-hole_side_length) / 2)
+                # Evaluates to zero for 1U keys.
+                adjustment_for_long_keys_mm: float = (
+                    MX_Key.keycap_space_side_length_mm
+                    * (column.key_length_U - 1) 
+                    * 0.5)
                 x_coord: float = (row_index
                                   * MX_Key.keycap_space_side_length_mm
                                   * column.key_length_U
