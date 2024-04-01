@@ -214,9 +214,6 @@ def render(part: Part) ->  _OpenSCADObject:
     """ The highest-level render function. """
     return render_minuend(part) - render_subtrahend(part)
     return minuend - subtrahend
-#    return minuend # TODO : remove this temp. return,
-                   # used for diagnostics on minuend renderer.
-
 
 def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
     """ Returns one rectangular prism, transformed into world space,
