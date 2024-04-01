@@ -108,10 +108,12 @@ def build_part() -> Part:
             1 for i in range(finger_cols_num_cols)]
 
     # Actual input data for finger column group.
-    finger_col_gp_top_padding_mm: float = 0.0
-    finger_col_gp_bottom_padding_mm: float = 0.0
-    finger_col_gp_left_padding_mm: float = 0.0
-    finger_col_gp_right_padding_mm: float = 0.0
+    # Nonzero padding means that the spacer part actually fit to exist
+    # in the real world.
+    finger_col_gp_top_padding_mm: float = 3.0
+    finger_col_gp_bottom_padding_mm: float = 3.0
+    finger_col_gp_left_padding_mm: float = 3.0
+    finger_col_gp_right_padding_mm: float = 3.0
     finger_col_gp_x_start_pos: float = 0.0
     finger_col_gp_y_start_pos: float = 0.0
     finger_col_gp_rotation_CW_degrees: float = 0.0
@@ -125,10 +127,12 @@ def build_part() -> Part:
             2 for i in range(thumb_cols_num_cols)]
     
     # Actual input data for thumb column group.
-    thumb_col_gp_top_padding_mm: float = 0.0
-    thumb_col_gp_bottom_padding_mm: float = 0.0
-    thumb_col_gp_left_padding_mm: float = 0.0
-    thumb_col_gp_right_padding_mm: float = 0.0
+    # Nonzero padding means that the spacer part actually fit to exist
+    # in the real world.
+    thumb_col_gp_top_padding_mm: float = 3.0
+    thumb_col_gp_bottom_padding_mm: float = 3.0
+    thumb_col_gp_left_padding_mm: float = 3.0
+    thumb_col_gp_right_padding_mm: float = 3.0
     thumb_col_gp_x_start_pos: float = 100.0 # TODO : Needs tuning.
     thumb_col_gp_y_start_pos: float = 100.0 # TODO : Needs tuning.
     thumb_col_gp_rotation_CW_degrees: float = 45.0
@@ -378,10 +382,13 @@ def render_subtrahend_spacer(part: Part):
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
     hole_prism_uncentered: _OpenSCADObject = (cube(
-        hole_side_length,
-        hole_side_length,
+        MX_Key.keycap_space_side_length_mm,
+        MX_Key.keycap_space_side_length_mm,
         part.thickness_mm + z_buffer_mm)
-        .translate(0, 0, -z_buffer_mm / 2))
+        .translate(
+            -(MX_Key.keycap_space_side_length_mm - hole_side_length) / 2,
+            -(MX_Key.keycap_space_side_length_mm - hole_side_length) / 2,
+            -z_buffer_mm / 2))
     # Center hole within key space.  Colour the hole for visibility against
     # plate.
     offset_mm: float = (MX_Key.keycap_space_side_length_mm
