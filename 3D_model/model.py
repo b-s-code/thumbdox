@@ -135,7 +135,11 @@ def build_part() -> Part:
     
     # Actual input data for part.
     part_thickness_mm: float = 4
-    part_type: PartType = 'plate'
+    # TODO : clean up.  (Will continue changing this enum while writing
+    # subtrahend render functions.)
+    #part_type: PartType = 'plate'
+    part_type: PartType = 'spacer'
+    
     # END HARDCODED CONFIGURATION
 
     # Process all config.
@@ -352,6 +356,90 @@ def render_subtrahend_plate(part: Part):
 
     return subtrahend
 
+# TODO TODO TODO
+def render_subtrahend_spacer(part: Part):
+    # TODO : this is a copy-paste of plate render function.
+    """ Returns a matrix of (nearly always disjoint) prisms, to be
+        punched out of the switch plate.  This removal of material creates
+        holes for all key switches in all column groups.  Gives subtrahend
+        for LHS of the keyboard only.
+
+        The returned object has been transformed into world space.
+    """
+
+    # Accumulator for the sum of world space ColumnGroup hole prism matrices.
+    subtrahend: _OpenSCADObject = cube(0, 0, 0)
+
+    # Define a prism representing one key switch hole.  The prism is
+    # transformed within the object space of the key's entire space (i.e. in MX
+    # key systems, the 19.05mm by 19.05mm square), to be centered within the
+    # key's entire space.
+    hole_side_length: float = MX_Key.switch_hole_side_length_mm
+    # Prevent z-fighting with plate.
+    z_buffer_mm: float = 5
+    hole_prism_uncentered: _OpenSCADObject = (cube(
+        hole_side_length,
+        hole_side_length,
+        part.thickness_mm + z_buffer_mm)
+        .translate(0, 0, -z_buffer_mm / 2))
+    # Center hole within key space.  Colour the hole for visibility against
+    # plate.
+    offset_mm: float = (MX_Key.keycap_space_side_length_mm
+        - MX_Key.switch_hole_side_length_mm) / 2
+    hole_prism_centered = (hole_prism_uncentered
+                           .translate(offset_mm, offset_mm, 0)
+                           .color('green'))
+
+    for column_group in part.column_groups:
+        switch_hole_matrix: _OpenSCADObject = cube(0, 0, 0)
+
+        # Get a list of the top-LHS corner of each key in the ColumnGroup.
+        # Each key corner is represented as a translation from the origin.
+        # (This is where each column's user-specified vertical offset is
+        #  dealt with, as well as each column's implicit horizontal offset,
+        #  and the column group's padding.)
+        top_left_corners_coords: list[tuple(float, float)] = []
+        for column_index, column in enumerate(column_group.columns_params):
+            y_coord: float = (column_index
+                              * MX_Key.keycap_space_side_length_mm
+                              + column_group
+                                .column_group_params
+                                .left_padding_mm)
+            for row_index in range(column.numkeys):
+                # Evaluates to zero for 1U keys.
+                adjustment_for_long_keys_mm: float = (
+                    MX_Key.keycap_space_side_length_mm
+                    * (column.key_length_U - 1) 
+                    * 0.5)
+                x_coord: float = (row_index
+                                  * MX_Key.keycap_space_side_length_mm
+                                  * column.key_length_U
+                                  + column.x_offset_mm
+                                  + adjustment_for_long_keys_mm
+                                  + column_group
+                                    .column_group_params
+                                    .top_padding_mm)
+                top_left_corners_coords.append((x_coord, y_coord))
+
+        # (Accumulate transformed key switch holes.)
+        # For as many keys as there are in the ColumnGroup.
+        for corner in top_left_corners_coords:
+            # Transform a new hole prism into the ColumnGroup's object space.
+            switch_hole_matrix += (hole_prism_centered
+                .translate(corner[0], corner[1], 0))
+
+        # Get the world transform of the ColumnGroup.
+        # Apply it to the accumulated switch_hole_matrix.
+        world_space_switch_hole_matrix: _OpenSCADObject = world_transform(
+            column_group.column_group_params, switch_hole_matrix)
+        
+        subtrahend += world_space_switch_hole_matrix
+
+    return subtrahend
+
+#def render_subtrahend_base(part: Part):
+# TODO
+
 def render_subtrahend(part: Part) -> _OpenSCADObject:
     """ Varies w.r.t. part type.
  
@@ -367,8 +455,8 @@ def render_subtrahend(part: Part) -> _OpenSCADObject:
     """
     if part.part_type == "plate":
         return render_subtrahend_plate(part)
-#    elif part.part_type == "spacer":
-#        # TODO : write a function to deal with this.
+    elif part.part_type == "spacer":
+        return render_subtrahend_spacer(part)
 #    elif part.part_type == "base":
 #        # TODO : write a function to deal with this.
     else:
