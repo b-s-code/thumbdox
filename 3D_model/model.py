@@ -14,6 +14,25 @@ class ColumnParams:
         """ The trivial constructor. """
         self.x_offset_mm = x_offset_mm
         self.numkeys = numkeys
+        # All keys in a column are constrained to having the same length.
+        #
+        #                                        +---+ +---+
+        #   E.g. you can have a column           | 1u| |   |
+        #        like either of these.           +---+ | 2u|
+        #                                        | 1u| |   |
+        #                                        +---+ +---+
+        #                                        | 1u| |   |
+        #                                        +---+ | 2u|
+        #                                        | 1u| |   |
+        #                                        +---+ +---+
+        #                          
+        #                                        +---+
+        #                                        |   |
+        #         But not like this.             + 2u|
+        #                                        |   |
+        #                                        +---+
+        #                                        | 1u|
+        #                                        +---+
         self.key_length_U = key_length_U
 
 class ColumnGroupParams:
@@ -66,6 +85,7 @@ class Part:
         self.part_type = part_type
 
 class MX_Key:
+    """ Holds data related to a 1U MX key. """
     switch_hole_side_length_mm = 14
     keycap_side_length_mm = 18
     # Provides breathing space between keycaps.
@@ -239,7 +259,7 @@ def render_minuend(part: Part) -> _OpenSCADObject:
     return minuend
 
 def render_subtrahend_plate(part: Part):
-    """ Returns an almagamation of (nearly always disjoint) prisms, to be
+    """ Returns a matrix of (nearly always disjoint) prisms, to be
         punched out of the switch plate.  This removal of material creates
         holes for all key switches in all column groups.  Gives subtrahend
         for LHS of the keyboard only.
@@ -257,34 +277,66 @@ def render_subtrahend_plate(part: Part):
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
     hole_prism_uncentered: _OpenSCADObject = (cube(
-        hole_side_length,hole_side_length,
+        hole_side_length,
+        hole_side_length,
         part.thickness_mm + z_buffer_mm)
         .translate(0, 0, -z_buffer_mm / 2))
     # Center hole within key space.  Colour the hole for visibility against plate.
     offset_mm: float = (MX_Key.keycap_space_side_length_mm - MX_Key.switch_hole_side_length_mm) / 2
     hole_prism_centered = hole_prism_uncentered.translate(offset_mm, offset_mm, 0).color('green')
 
-    # For each ColumnGroup.
-    # TODO TODO TODO TODO TODO
+    for column_group in part.column_groups:
+        switch_hole_matrix: _OpenSCADObject = cube(0, 0, 0)
+
         # Get a list of the top-LHS corner of each key in the ColumnGroup.
         # Each key corner is represented as a translation from the origin.
         # (This is where each column's user-specified vertical offset is
-        #  dealt with, as well as each column's implicit horizontal offset.
+        #  dealt with, as well as each column's implicit horizontal offset,
+        #  and the column group's padding.)
+        top_left_corners_coords: list[tuple(float, float)] = []
+        for column_index, column in enumerate(column_group.columns_params):
+            y_coord: float = (column_index
+                              * MX_Key.keycap_space_side_length_mm
+                              + column_group
+                                .column_group_params
+                                .left_padding_mm)
+            for row_index in range(column.numkeys):
+                adjustment_for_long_keys_mm: float = ((
+                        MX_Key.keycap_space_side_length_mm
+                        * column.key_length_U
+                        - hole_side_length)
+                        / 2
+                        - (MX_Key.keycap_space_side_length_mm-hole_side_length) / 2)
+                x_coord: float = (row_index
+                                  * MX_Key.keycap_space_side_length_mm
+                                  * column.key_length_U
+                                  + column.x_offset_mm
+                                  + adjustment_for_long_keys_mm
+                                  + column_group
+                                    .column_group_params
+                                    .top_padding_mm)
+                top_left_corners_coords.append((x_coord, y_coord))
 
         # (Accumulate transformed key switch holes.)
-        # switch_hole_matrix: _OpenSCADObject = ...
         # For as many keys as there are in the ColumnGroup.
+        for corner in top_left_corners_coords:
+            # Transform a new hole prism into the ColumnGroup's object space.
+            switch_hole_matrix += (hole_prism_centered
+                .translate(corner[0], corner[1], 0))
 
-            # Transform a new hole_prism into object space of the keyboard
-            # half.
-    
-        # Get the world translation of the ColumnGroup.
+        # Get the world transform of the ColumnGroup.
         # Apply it to the accumulated switch_hole_matrix.
-        # (This is where ColumnGroup padding is dealt with.)
-
-   
-    # TODO : delete dummy return value.
-    return hole_prism_centered
+        # TODO : the world transform implied by a ColumnGroupParams relies on
+        # the ordering which is repeated both here, and in
+        # render_minuend_column_group.  This transform should really be
+        # encapsulated to mitigate the risk of messing up the
+        # rotation/translation order.
+        world_space_switch_hole_matrix: _OpenSCADObject = (switch_hole_matrix
+            .rotateZ(-column_group.column_group_params.rotation_CW_degrees)
+            .translate(column_group.column_group_params.x_start_pos,
+                       column_group.column_group_params.y_start_pos,
+                       0))
+        subtrahend += world_space_switch_hole_matrix
 
     return subtrahend
 
