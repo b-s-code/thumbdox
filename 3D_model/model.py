@@ -186,6 +186,33 @@ def build_part() -> Part:
     return part
 
 # # START UTILITY FUNCTIONS
+def world_transform(column_group_params: ColumnGroupParams,
+                    obj: _OpenSCADObject) -> _OpenSCADObject:
+    """ Applies the ColumnGroupParams' world transformation to the input
+        _OpenSCADObject and returns the result.  The transformation is
+        encapsulated in a function to keep rotation/translation order
+        consistent.  I've chosen for rotation to occur first since I find
+        rotation-then-translation more useful in this context.
+
+        The "world transformation" does not include padding.  It just chains
+        into one transformation the required rotation and translation
+        required by:
+          - x_start_pos,
+          - y_start_pos, and
+          - rotation_CW_degrees.
+    """
+    # We flip the sign of the rotation so that a clockwise rotation about
+    # the positive z-axis does actually result.
+    resultant: _OpenSCADObject = (obj
+        .rotateZ(
+            -column_group_params                           
+            .rotation_CW_degrees)
+        .translate(
+            column_group_params.x_start_pos,
+            column_group_params.y_start_pos,
+            0))
+    return resultant
+
 def render(part: Part) ->  _OpenSCADObject:
     """ The highest-level render function. """
     return render_minuend(part) - render_subtrahend(part)
@@ -232,14 +259,8 @@ def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
             column_group_y_length_required_mm,
             thickness_mm)
     
-    # I expect that rotation before translation will be more useful.
-    # We flip the sign of the rotation so that a clockwise rotation
-    # about the positive z-axis does actually result.
-    world_space_resultant: _OpenSCADObject = (object_space_resultant
-        .rotateZ(-column_group.column_group_params.rotation_CW_degrees)
-        .translate(column_group.column_group_params.x_start_pos,
-                   column_group.column_group_params.y_start_pos,
-                   0))
+    world_space_resultant: _OpenSCADObject = world_transform(
+            column_group.column_group_params, object_space_resultant)
 
     return world_space_resultant
 
@@ -330,16 +351,9 @@ def render_subtrahend_plate(part: Part):
 
         # Get the world transform of the ColumnGroup.
         # Apply it to the accumulated switch_hole_matrix.
-        # TODO : the world transform implied by a ColumnGroupParams relies on
-        # the ordering which is repeated both here, and in
-        # render_minuend_column_group.  This transform should really be
-        # encapsulated to mitigate the risk of messing up the
-        # rotation/translation order.
-        world_space_switch_hole_matrix: _OpenSCADObject = (switch_hole_matrix
-            .rotateZ(-column_group.column_group_params.rotation_CW_degrees)
-            .translate(column_group.column_group_params.x_start_pos,
-                       column_group.column_group_params.y_start_pos,
-                       0))
+        world_space_switch_hole_matrix: _OpenSCADObject = world_transform(
+            column_group.column_group_params, switch_hole_matrix)
+        
         subtrahend += world_space_switch_hole_matrix
 
     return subtrahend
