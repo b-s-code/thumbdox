@@ -204,11 +204,8 @@ def world_transform(column_group_params: ColumnGroupParams,
     # We flip the sign of the rotation so that a clockwise rotation about
     # the positive z-axis does actually result.
     resultant: _OpenSCADObject = (obj
-        .rotateZ(
-            -column_group_params                           
-            .rotation_CW_degrees)
-        .translate(
-            column_group_params.x_start_pos,
+        .rotateZ(-column_group_params.rotation_CW_degrees)
+        .translate(column_group_params.x_start_pos,
             column_group_params.y_start_pos,
             0))
     return resultant
