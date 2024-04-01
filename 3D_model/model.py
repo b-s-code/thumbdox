@@ -381,13 +381,19 @@ def render_subtrahend_spacer(part: Part):
     hole_side_length: float = MX_Key.switch_hole_side_length_mm
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
+    # Bigger than MX_Key.keycap_space_side_length_mm because real world
+    # experience implies wiring may extend beyond key space boundaries.
+    padding_around_keyspace_mm: float = 3 # For spacer part only.
+    spacer_part_key_space_allocation_mm: float = (
+            MX_Key.keycap_space_side_length_mm
+            + padding_around_keyspace_mm)
     hole_prism_uncentered: _OpenSCADObject = (cube(
-        MX_Key.keycap_space_side_length_mm,
-        MX_Key.keycap_space_side_length_mm,
+        spacer_part_key_space_allocation_mm,
+        spacer_part_key_space_allocation_mm,
         part.thickness_mm + z_buffer_mm)
         .translate(
-            -(MX_Key.keycap_space_side_length_mm - hole_side_length) / 2,
-            -(MX_Key.keycap_space_side_length_mm - hole_side_length) / 2,
+            -(spacer_part_key_space_allocation_mm - hole_side_length) / 2,
+            -(spacer_part_key_space_allocation_mm - hole_side_length) / 2,
             -z_buffer_mm / 2))
     # Center hole within key space.  Colour the hole for visibility against
     # plate.
