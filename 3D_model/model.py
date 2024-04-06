@@ -44,6 +44,9 @@ def build_part() -> Part:
     thumb_col_gp_bottom_padding_mm: float = 3.0
     thumb_col_gp_left_padding_mm: float = 3.0
     thumb_col_gp_right_padding_mm: float = 3.0
+    # TODO : might be easier to do the tuning below by adding a crude
+    # keycap rendering function.  (It is critical to avoid keycap
+    # collisions in the design.)
     thumb_col_gp_x_start_pos: float = 100.0 # TODO : Needs tuning.
     thumb_col_gp_y_start_pos: float = 100.0 # TODO : Needs tuning.
     thumb_col_gp_rotation_CW_degrees: float = 45.0
