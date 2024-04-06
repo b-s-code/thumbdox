@@ -141,9 +141,9 @@ def build_part() -> Part:
     part_thickness_mm: float = 4
     # TODO : clean up.  (Will continue changing this enum manually, while
     # writing subtrahend render function.)
-    #part_type: PartType = 'plate'
+    part_type: PartType = 'plate'
     #part_type: PartType = 'spacer'
-    part_type: PartType = 'base'
+    #part_type: PartType = 'base'
     
     # END HARDCODED CONFIGURATION
 
@@ -296,6 +296,8 @@ def render_subtrahend(part: Part):
         Gives subtrahend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
+    # TODO : account for MCU cable, possible TRRS etc.
+
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
 
