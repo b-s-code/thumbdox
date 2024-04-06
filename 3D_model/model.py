@@ -220,13 +220,15 @@ def world_transform(column_group_params: ColumnGroupParams,
     return resultant
 
 def render(part: Part) ->  _OpenSCADObject:
-    """ The highest-level render function. """
+    """ The top-level render function. """
     return render_minuend(part) - render_subtrahend(part)
     return minuend - subtrahend
 
 def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
     """ Returns one rectangular prism, transformed into world space,
         according to the ColumnGroup's ColumnGroupParams.
+        
+        LHS of keyboard only.
     """
     column_group: ColumnGroup = part.column_groups[i]
 
@@ -272,7 +274,8 @@ def render_minuend(part: Part) -> _OpenSCADObject:
         rendering one rectangular prism per column group with no
         holes in it.
         
-        The returned object has been transformed into world space.
+        Gives minuend for LHS of the keyboard only.  The returned object
+        has been transformed into world space.
     """
     minuend: _OpenSCADObject = cube(0, 0, 0)
     num_column_groups: int = range(len(part.column_groups))
