@@ -2,7 +2,7 @@ from solid2.core.builtins.openscad_primitives import _OpenSCADObject
 from solid2 import cube
 from keyboard_types import *
 
-def world_transform(column_group_params: ColumnGroupParams,
+def _world_transform(column_group_params: ColumnGroupParams,
                     obj: _OpenSCADObject) -> _OpenSCADObject:
     """ Applies the ColumnGroupParams' world transformation to the input
         _OpenSCADObject and returns the result.  The transformation is
@@ -28,10 +28,10 @@ def world_transform(column_group_params: ColumnGroupParams,
 
 def render(part: Part) ->  _OpenSCADObject:
     """ The top-level render function. """
-    return render_minuend(part) - render_subtrahend(part)
+    return _render_minuend(part) - _render_subtrahend(part)
     return minuend - subtrahend
 
-def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
+def _render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
     """ Returns one rectangular prism, transformed into world space,
         according to the ColumnGroup's ColumnGroupParams.
         
@@ -71,12 +71,12 @@ def render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
             column_group_y_length_required_mm,
             thickness_mm)
     
-    world_space_resultant: _OpenSCADObject = world_transform(
+    world_space_resultant: _OpenSCADObject = _world_transform(
             column_group.column_group_params, object_space_resultant)
 
     return world_space_resultant
 
-def render_minuend(part: Part) -> _OpenSCADObject:
+def _render_minuend(part: Part) -> _OpenSCADObject:
     """ Invariant w.r.t. part type. Exploits the fact we're just
         rendering one rectangular prism per column group with no
         holes in it.
@@ -89,10 +89,10 @@ def render_minuend(part: Part) -> _OpenSCADObject:
     # Finger column group minuend in red, thumb column group minuend in blue.
     colors = ('red', 'blue')
     for i in num_column_groups:
-        minuend += render_minuend_column_group(part, i).color(colors[i])
+        minuend += _render_minuend_column_group(part, i).color(colors[i])
     return minuend
 
-def render_subtrahend(part: Part):
+def _render_subtrahend(part: Part):
     """ Varies w.r.t. part type.
  
         Returned object is either:
@@ -199,7 +199,7 @@ def render_subtrahend(part: Part):
 
         # Get the world transform of the ColumnGroup.
         # Apply it to the accumulated switch_hole_matrix.
-        world_space_switch_hole_matrix: _OpenSCADObject = world_transform(
+        world_space_switch_hole_matrix: _OpenSCADObject = _world_transform(
             column_group.column_group_params, switch_hole_matrix)
         
         subtrahend += world_space_switch_hole_matrix
