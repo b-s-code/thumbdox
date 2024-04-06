@@ -140,9 +140,10 @@ def build_part() -> Part:
     # Actual input data for part.
     part_thickness_mm: float = 4
     # TODO : clean up.  (Will continue changing this enum manually, while
-    # writing subtrahend render functions.)
+    # writing subtrahend render function.)
     #part_type: PartType = 'plate'
-    part_type: PartType = 'spacer'
+    #part_type: PartType = 'spacer'
+    part_type: PartType = 'base'
     
     # END HARDCODED CONFIGURATION
 
@@ -328,17 +329,13 @@ def render_subtrahend(part: Part):
     
     # Have some polymorphism over parts here instead of duplicated code
     # across three functions.
-    # TODO : revisit whether this is still reasonable when writing code for
-    # rendering base part.
     hole_prism_uncentered: _OpenSCADObject = cube(0, 0, 0)
     if (part.part_type == "plate"):
          hole_prism_uncentered = hole_prism_uncentered_plate 
     elif (part.part_type == "spacer"):
          hole_prism_uncentered = hole_prism_uncentered_spacer
     elif (part.part_type == "base"):
-        # TODO
-        msg = "Not yet implemented."
-        raise ValueError(msg)
+        return subtrahend
     else:
         raise ValueError
 
