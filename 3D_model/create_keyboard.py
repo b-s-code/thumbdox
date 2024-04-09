@@ -28,7 +28,7 @@ def _world_transform(column_group_params: ColumnGroupParams,
 
 def render(part: Part) ->  _OpenSCADObject:
     """ The top-level render function. """
-    return _render_minuend(part) - _render_subtrahend(part)
+    return _render_minuend(part) + _render_subtrahend(part)
     return minuend - subtrahend
 
 def _render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
@@ -118,9 +118,9 @@ def _render_subtrahend(part: Part):
     hole_side_length: float = MX_Key.switch_hole_side_length_mm
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
-    hole_prism_uncentered_plate: _OpenSCADObject = (cube(
-        hole_side_length,
-        hole_side_length,
+    keycap_prism_uncentered_plate: _OpenSCADObject = (cube(
+        MX_Key.keycap_side_length_mm,
+        MX_Key.keycap_side_length_mm,
         part.thickness_mm + z_buffer_mm)
         .translate(0, 0, -z_buffer_mm / 2))
     
@@ -143,7 +143,7 @@ def _render_subtrahend(part: Part):
     # across three functions.
     hole_prism_uncentered: _OpenSCADObject = cube(0, 0, 0)
     if (part.part_type == "plate"):
-         hole_prism_uncentered = hole_prism_uncentered_plate 
+         hole_prism_uncentered = keycap_prism_uncentered_plate
     elif (part.part_type == "spacer"):
          hole_prism_uncentered = hole_prism_uncentered_spacer
     elif (part.part_type == "base"):
@@ -154,7 +154,7 @@ def _render_subtrahend(part: Part):
     # Center hole within key space.  Colour the hole for visibility against
     # plate.
     offset_mm: float = (MX_Key.keycap_space_side_length_mm
-        - MX_Key.switch_hole_side_length_mm) / 2
+        - MX_Key.keycap_side_length_mm) / 2
     hole_prism_centered = (hole_prism_uncentered
                            .translate(offset_mm, offset_mm, 0)
                            .color('green'))
@@ -180,6 +180,7 @@ def _render_subtrahend(part: Part):
                     MX_Key.keycap_space_side_length_mm
                     * (column.key_length_U - 1) 
                     * 0.5)
+                adjustment_for_long_keys_mm = 0
                 x_coord: float = (row_index
                                   * MX_Key.keycap_space_side_length_mm
                                   * column.key_length_U
