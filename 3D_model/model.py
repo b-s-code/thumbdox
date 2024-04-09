@@ -47,9 +47,9 @@ def build_part() -> Part:
     # TODO : might be easier to do the tuning below by adding a crude
     # keycap rendering function.  (It is critical to avoid keycap
     # collisions in the design.)
-    thumb_col_gp_x_start_pos: float = 100.0 # TODO : Needs tuning.
-    thumb_col_gp_y_start_pos: float = 100.0 # TODO : Needs tuning.
-    thumb_col_gp_rotation_CW_degrees: float = 45.0
+    thumb_col_gp_x_start_pos: float = 60.0
+    thumb_col_gp_y_start_pos: float = 97.0
+    thumb_col_gp_rotation_CW_degrees: float = 30.0
     
     # Actual input data for part.
     part_thickness_mm: float = 4
