@@ -28,8 +28,9 @@ def _world_transform(column_group_params: ColumnGroupParams,
 
 def render(part: Part) ->  _OpenSCADObject:
     """ The top-level render function. """
-    return _render_minuend(part) + _render_subtrahend(part)
-    return minuend - subtrahend
+    if part.part_type == "plate_and_caps":
+        return _render_minuend(part) + _render_keycaps(part)
+    return _render_minuend(part) - _render_subtrahend(part)
 
 def _render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
     """ Returns one rectangular prism, transformed into world space,
@@ -118,9 +119,9 @@ def _render_subtrahend(part: Part):
     hole_side_length: float = MX_Key.switch_hole_side_length_mm
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
-    keycap_prism_uncentered_plate: _OpenSCADObject = (cube(
-        MX_Key.keycap_side_length_mm,
-        MX_Key.keycap_side_length_mm,
+    hole_prism_uncentered_plate: _OpenSCADObject = (cube(
+        hole_side_length,
+        hole_side_length,
         part.thickness_mm + z_buffer_mm)
         .translate(0, 0, -z_buffer_mm / 2))
     
@@ -140,10 +141,10 @@ def _render_subtrahend(part: Part):
             -z_buffer_mm / 2))
     
     # Have some polymorphism over parts here instead of duplicated code
-    # across three functions.
+    # across multiple functions.
     hole_prism_uncentered: _OpenSCADObject = cube(0, 0, 0)
     if (part.part_type == "plate"):
-         hole_prism_uncentered = keycap_prism_uncentered_plate
+         hole_prism_uncentered = hole_prism_uncentered_plate
     elif (part.part_type == "spacer"):
          hole_prism_uncentered = hole_prism_uncentered_spacer
     elif (part.part_type == "base"):
@@ -154,7 +155,7 @@ def _render_subtrahend(part: Part):
     # Center hole within key space.  Colour the hole for visibility against
     # plate.
     offset_mm: float = (MX_Key.keycap_space_side_length_mm
-        - MX_Key.keycap_side_length_mm) / 2
+        - MX_Key.switch_hole_side_length_mm) / 2
     hole_prism_centered = (hole_prism_uncentered
                            .translate(offset_mm, offset_mm, 0)
                            .color('green'))
@@ -180,7 +181,6 @@ def _render_subtrahend(part: Part):
                     MX_Key.keycap_space_side_length_mm
                     * (column.key_length_U - 1) 
                     * 0.5)
-                adjustment_for_long_keys_mm = 0
                 x_coord: float = (row_index
                                   * MX_Key.keycap_space_side_length_mm
                                   * column.key_length_U
@@ -206,3 +206,88 @@ def _render_subtrahend(part: Part):
         subtrahend += world_space_switch_hole_matrix
 
     return subtrahend
+
+def _render_keycaps(part: Part):
+    """ Varies w.r.t. part type.
+ 
+        Returned object is :
+          - a disjoint matrix of rectangular prisms approximating
+            the volumes of the keycaps, for all keys in all column groups.
+          - of imperfect height.  It's intended to be used only for ensuring
+            no keycaps collide, on a flat keyboard plate.
+ 
+        Gives keycaps for LHS of the keyboard only.  The returned object
+        has been transformed into world space.
+    """
+    # Accumulator for the sum of world space ColumnGroup hole prism matrices.
+    keycaps: _OpenSCADObject = cube(0, 0, 0)
+
+    # Define a prism representing one keycap.  The prism is
+    # transformed within the object space of the key's entire space (i.e. in MX
+    # key systems, the 19.05mm by 19.05mm square), to be centered within the
+    # key's entire space.
+    # Prevent z-fighting with plate.
+    z_buffer_mm: float = 5
+    keycap_prism_uncentered: _OpenSCADObject = (cube(
+        MX_Key.keycap_side_length_mm,
+        MX_Key.keycap_side_length_mm,
+        part.thickness_mm + z_buffer_mm)
+        .translate(0, 0, -z_buffer_mm / 2))
+    
+
+    # Center hole within key space.  Colour the hole for visibility against
+    # plate.
+    offset_mm: float = (MX_Key.keycap_space_side_length_mm
+        - MX_Key.keycap_side_length_mm) / 2
+    keycap_prism_centered = (keycap_prism_uncentered
+                           .translate(offset_mm, offset_mm, 0)
+                           .color('green'))
+
+    for column_group in part.column_groups:
+        keycap_matrix: _OpenSCADObject = cube(0, 0, 0)
+
+        # Get a list of the top-LHS corner of each key in the ColumnGroup.
+        # Each key corner is represented as a translation from the origin.
+        # (This is where each column's user-specified vertical offset is
+        #  dealt with, as well as each column's implicit horizontal offset,
+        #  and the column group's padding.)
+        top_left_corners_coords: list[tuple(float, float)] = []
+        for column_index, column in enumerate(column_group.columns_params):
+            y_coord: float = (column_index
+                              * MX_Key.keycap_space_side_length_mm
+                              + column_group
+                                .column_group_params
+                                .left_padding_mm)
+            for row_index in range(column.numkeys):
+                # Evaluates to zero for 1U keys.
+                adjustment_for_long_keys_mm: float = (
+                    MX_Key.keycap_space_side_length_mm
+                    * (column.key_length_U - 1) 
+                    * 0.5)
+                if (part.part_type == "plate_and_caps"):
+                    adjustment_for_long_keys_mm = 0
+                x_coord: float = (row_index
+                                  * MX_Key.keycap_space_side_length_mm
+                                  * column.key_length_U
+                                  + column.x_offset_mm
+                                  + adjustment_for_long_keys_mm
+                                  + column_group
+                                    .column_group_params
+                                    .top_padding_mm)
+                top_left_corners_coords.append((x_coord, y_coord))
+
+        # (Accumulate transformed key switch holes.)
+        # For as many keys as there are in the ColumnGroup.
+        for corner in top_left_corners_coords:
+            # Transform a new hole prism into the ColumnGroup's object space.
+            keycap_matrix += (keycap_prism_centered
+                .translate(corner[0], corner[1], 0))
+
+        # Get the world transform of the ColumnGroup.
+        # Apply it to the accumulated keycap_matrix.
+        world_space_keycap_matrix: _OpenSCADObject = _world_transform(
+            column_group.column_group_params, keycap_matrix)
+        
+        keycaps += world_space_keycap_matrix
+
+    return keycaps

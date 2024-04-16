@@ -1,6 +1,6 @@
 from enum import Enum
 
-PartType = Enum('PartType', ['plate',  'spacer', 'base'])
+PartType = Enum('PartType', ['plate',  'spacer', 'base', 'plate_and_caps'])
 
 class ColumnParams:
     def __init__(

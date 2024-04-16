@@ -55,7 +55,8 @@ def build_part() -> Part:
     part_thickness_mm: float = 4
     # TODO : clean up.  (Will continue changing this enum manually, while
     # writing subtrahend render function.)
-    part_type: PartType = 'plate'
+    #part_type: PartType = 'plate'
+    part_type: PartType = 'plate_and_caps'
     #part_type: PartType = 'spacer'
     #part_type: PartType = 'base'
     
