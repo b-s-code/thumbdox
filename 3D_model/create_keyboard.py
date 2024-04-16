@@ -28,9 +28,16 @@ def _world_transform(column_group_params: ColumnGroupParams,
 
 def render(part: Part) ->  _OpenSCADObject:
     """ The top-level render function. """
+    
+    resultant: _OpenSCADObject = _render_minuend(part)
     if part.part_type == "plate_and_caps":
-        return _render_minuend(part) + _render_keycaps(part)
-    return _render_minuend(part) - _render_subtrahend(part)
+        resultant += _render_keycaps(part)
+        part.part_type = 'plate'
+        resultant -= _render_subtrahend(part)
+    else:
+        resultant -= _render_subtrahend(part)
+
+    return resultant
 
 def _render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
     """ Returns one rectangular prism, transformed into world space,
@@ -158,7 +165,7 @@ def _render_subtrahend(part: Part):
         - MX_Key.switch_hole_side_length_mm) / 2
     hole_prism_centered = (hole_prism_uncentered
                            .translate(offset_mm, offset_mm, 0)
-                           .color('green'))
+                           .color('yellow'))
 
     for column_group in part.column_groups:
         switch_hole_matrix: _OpenSCADObject = cube(0, 0, 0)
@@ -219,6 +226,8 @@ def _render_keycaps(part: Part):
         Gives keycaps for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
+    # TODO : support >1u keycaps.
+
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     keycaps: _OpenSCADObject = cube(0, 0, 0)
 
@@ -233,15 +242,16 @@ def _render_keycaps(part: Part):
         MX_Key.keycap_side_length_mm,
         part.thickness_mm + z_buffer_mm)
         .translate(0, 0, -z_buffer_mm / 2))
-    
 
-    # Center hole within key space.  Colour the hole for visibility against
+    # Center keycap within key space.  Colour the keycap for visibility against
     # plate.
     offset_mm: float = (MX_Key.keycap_space_side_length_mm
         - MX_Key.keycap_side_length_mm) / 2
+    keycap_color = 'green'
+    keycap_opacity = 0.5
     keycap_prism_centered = (keycap_prism_uncentered
                            .translate(offset_mm, offset_mm, 0)
-                           .color('green'))
+                           .color(keycap_color, keycap_opacity))
 
     for column_group in part.column_groups:
         keycap_matrix: _OpenSCADObject = cube(0, 0, 0)
@@ -260,12 +270,7 @@ def _render_keycaps(part: Part):
                                 .left_padding_mm)
             for row_index in range(column.numkeys):
                 # Evaluates to zero for 1U keys.
-                adjustment_for_long_keys_mm: float = (
-                    MX_Key.keycap_space_side_length_mm
-                    * (column.key_length_U - 1) 
-                    * 0.5)
-                if (part.part_type == "plate_and_caps"):
-                    adjustment_for_long_keys_mm = 0
+                adjustment_for_long_keys_mm: float = 0
                 x_coord: float = (row_index
                                   * MX_Key.keycap_space_side_length_mm
                                   * column.key_length_U
@@ -276,10 +281,10 @@ def _render_keycaps(part: Part):
                                     .top_padding_mm)
                 top_left_corners_coords.append((x_coord, y_coord))
 
-        # (Accumulate transformed key switch holes.)
+        # (Accumulate transformed keycaps.)
         # For as many keys as there are in the ColumnGroup.
         for corner in top_left_corners_coords:
-            # Transform a new hole prism into the ColumnGroup's object space.
+            # Transform a new keycap prism into the ColumnGroup's object space.
             keycap_matrix += (keycap_prism_centered
                 .translate(corner[0], corner[1], 0))
 
