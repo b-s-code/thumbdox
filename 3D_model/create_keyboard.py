@@ -100,7 +100,7 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
         minuend += _render_minuend_column_group(part, i).color(colors[i])
     return minuend
 
-def _render_subtrahend(part: Part):
+def _render_subtrahend(part: Part) -> _OpenSCADObject:
     """ Varies w.r.t. part type.
  
         Returned object is either:
@@ -214,7 +214,37 @@ def _render_subtrahend(part: Part):
 
     return subtrahend
 
-def _render_keycaps(part: Part):
+def _get_keycap_centered(keycap_units: int,
+                         plate_thickness_mm: float) -> _OpenSCADObject:
+    """ Returns a keycap (1U, 2U, ..., depending on keycap_units),
+        centered within keycap space.  If greater than one unit long,
+        the long side of the keycap runs parallel to the x-axis.
+    """
+    # Define a prism representing one keycap.  The prism is
+    # transformed within the object space of the key's entire space (i.e. in MX
+    # key systems, for a 1u keycap, this would be the 19.05mm by 19.05mm square),
+    # to be centered within the key's entire space.
+
+    # Prevent z-fighting with plate.
+    z_buffer_mm: float = 5
+    keycap_prism_uncentered: _OpenSCADObject = (cube(
+        MX_Key.keycap_side_length_mm,
+        MX_Key.keycap_side_length_mm,
+        plate_thickness_mm + z_buffer_mm)
+        .translate(0, 0, -z_buffer_mm / 2))
+
+    # Center keycap within key space.  Colour the keycap for visibility against
+    # plate.
+    offset_mm: float = (MX_Key.keycap_space_side_length_mm
+        - MX_Key.keycap_side_length_mm) / 2
+    keycap_color = 'green'
+    keycap_opacity = 0.5
+    keycap_prism_centered = (keycap_prism_uncentered
+                           .translate(offset_mm, offset_mm, 0)
+                           .color(keycap_color, keycap_opacity))
+    return keycap_prism_centered
+
+def _render_keycaps(part: Part) -> _OpenSCADObject:
     """ Varies w.r.t. part type.
  
         Returned object is :
@@ -230,28 +260,6 @@ def _render_keycaps(part: Part):
 
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     keycaps: _OpenSCADObject = cube(0, 0, 0)
-
-    # Define a prism representing one keycap.  The prism is
-    # transformed within the object space of the key's entire space (i.e. in MX
-    # key systems, the 19.05mm by 19.05mm square), to be centered within the
-    # key's entire space.
-    # Prevent z-fighting with plate.
-    z_buffer_mm: float = 5
-    keycap_prism_uncentered: _OpenSCADObject = (cube(
-        MX_Key.keycap_side_length_mm,
-        MX_Key.keycap_side_length_mm,
-        part.thickness_mm + z_buffer_mm)
-        .translate(0, 0, -z_buffer_mm / 2))
-
-    # Center keycap within key space.  Colour the keycap for visibility against
-    # plate.
-    offset_mm: float = (MX_Key.keycap_space_side_length_mm
-        - MX_Key.keycap_side_length_mm) / 2
-    keycap_color = 'green'
-    keycap_opacity = 0.5
-    keycap_prism_centered = (keycap_prism_uncentered
-                           .translate(offset_mm, offset_mm, 0)
-                           .color(keycap_color, keycap_opacity))
 
     for column_group in part.column_groups:
         keycap_matrix: _OpenSCADObject = cube(0, 0, 0)
@@ -285,7 +293,7 @@ def _render_keycaps(part: Part):
         # For as many keys as there are in the ColumnGroup.
         for corner in top_left_corners_coords:
             # Transform a new keycap prism into the ColumnGroup's object space.
-            keycap_matrix += (keycap_prism_centered
+            keycap_matrix += (_get_keycap_centered(1, part.thickness_mm)
                 .translate(corner[0], corner[1], 0))
 
         # Get the world transform of the ColumnGroup.
