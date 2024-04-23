@@ -228,7 +228,7 @@ def _get_keycap_centered(keycap_units: int,
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
     keycap_prism_uncentered: _OpenSCADObject = (cube(
-        MX_Key.keycap_side_length_mm * keycap_units,
+        MX_Key.keycap_side_length(keycap_units),
         MX_Key.keycap_side_length_mm,
         plate_thickness_mm + z_buffer_mm)
         .translate(0, 0, -z_buffer_mm / 2))

@@ -82,8 +82,23 @@ class Part:
         self.part_type = part_type
 
 class MX_Key:
-    """ Holds data related to a 1U MX key. """
+    """ Holds data related to an MX key. """
     switch_hole_side_length_mm = 14
+    # For a 1U key.
     keycap_side_length_mm = 18
     # Provides breathing space between keycaps.
     keycap_space_side_length_mm = 19.05
+
+    @staticmethod
+    def keycap_side_length(num_units: int) -> float:
+        """ Evaluates the length in mm of the long side of a keycap, which
+            may be more than 1U long.
+        """
+        full_length_of_space: float = (MX_Key.keycap_space_side_length_mm
+                                      * num_units)
+        # Need to reduce length at *both* ends of the long side.  So we don't
+        # half the difference calculated here.
+        subtrahend: float = (MX_Key.keycap_space_side_length_mm
+                            - MX_Key.keycap_side_length_mm)
+        return full_length_of_space - subtrahend
+
