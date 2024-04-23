@@ -228,7 +228,7 @@ def _get_keycap_centered(keycap_units: int,
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
     keycap_prism_uncentered: _OpenSCADObject = (cube(
-        MX_Key.keycap_side_length_mm,
+        MX_Key.keycap_side_length_mm * keycap_units,
         MX_Key.keycap_side_length_mm,
         plate_thickness_mm + z_buffer_mm)
         .translate(0, 0, -z_buffer_mm / 2))
@@ -287,14 +287,11 @@ def _render_keycaps(part: Part) -> _OpenSCADObject:
                                   + column_group
                                     .column_group_params
                                     .top_padding_mm)
-                top_left_corners_coords.append((x_coord, y_coord))
-
-        # (Accumulate transformed keycaps.)
-        # For as many keys as there are in the ColumnGroup.
-        for corner in top_left_corners_coords:
-            # Transform a new keycap prism into the ColumnGroup's object space.
-            keycap_matrix += (_get_keycap_centered(1, part.thickness_mm)
-                .translate(corner[0], corner[1], 0))
+                # Transform a new keycap prism into the ColumnGroup's object space.
+                keycap_matrix += (_get_keycap_centered(
+                                  column.key_length_U,
+                                  part.thickness_mm)
+                                  .translate(x_coord, y_coord, 0))
 
         # Get the world transform of the ColumnGroup.
         # Apply it to the accumulated keycap_matrix.
