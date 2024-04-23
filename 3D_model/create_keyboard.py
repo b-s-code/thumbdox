@@ -219,6 +219,10 @@ def _get_keycap_centered(keycap_units: int,
     """ Returns a keycap (1U, 2U, ..., depending on keycap_units),
         centered within keycap space.  If greater than one unit long,
         the long side of the keycap runs parallel to the x-axis.
+
+        Note that the "keycap" is really just an extruded rectangle.
+        It has no "curve", nor vertical taper.  It is intended only to be viewed
+        for diagnosing and avoiding keycap collisions by eye.
     """
     # Define a prism representing one keycap.  The prism is
     # transformed within the object space of the key's entire space (i.e. in MX
