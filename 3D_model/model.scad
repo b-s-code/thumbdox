@@ -9,7 +9,7 @@ difference() {
 			}
 		}
 		color(alpha = 1.0, c = "blue") {
-			translate(v = [60.0, 97.0, 0]) {
+			translate(v = [60.0, 96.5, 0]) {
 				rotate(a = [0, 0, -30.0]) {
 					cube(size = [44.1, 44.1, 4]);
 				}
@@ -194,7 +194,7 @@ difference() {
 				}
 			}
 		}
-		translate(v = [60.0, 97.0, 0]) {
+		translate(v = [60.0, 96.5, 0]) {
 			rotate(a = [0, 0, -30.0]) {
 				union() {
 					cube(size = [0, 0, 0]);
@@ -400,7 +400,7 @@ difference() {
 				}
 			}
 		}
-		translate(v = [60.0, 97.0, 0]) {
+		translate(v = [60.0, 96.5, 0]) {
 			rotate(a = [0, 0, -30.0]) {
 				union() {
 					cube(size = [0, 0, 0]);
