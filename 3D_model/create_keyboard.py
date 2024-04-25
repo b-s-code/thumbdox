@@ -84,6 +84,8 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
         Gives minuend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
+    # TODO : account for joinery of parts (bolts, glued areas, etc).
+    # TODO : account necessary z-length for wiring in spacer part.
     # We get less branching logic here by just farming out keycap minuend construction
     # to a separate function.
     if (part.part_type == "keycaps"):
