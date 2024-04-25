@@ -2,5 +2,7 @@
 # for designing the 3D model.
 venv/
 
+__pycache__/
+
 # Vim swap files.
 *.swp
