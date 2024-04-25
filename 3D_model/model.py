@@ -3,9 +3,10 @@ from solid2 import cube
 from create_keyboard import *
 from keyboard_types import *
 
-def build_part() -> Part:
+def build_part(part_type: PartType) -> Part:
     """ Returns a Part that can be rendered.  The Part is built up in a
         manually-specified sequence from hardcoded values inside this function.
+        The Part returned belongs to the left-hand side of a keyboard.
     """
 
     # START HARDCODED CONFIGURATION
@@ -50,13 +51,6 @@ def build_part() -> Part:
     
     # Actual input data for part.
     part_thickness_mm: float = 4
-    # TODO : clean up.  (Will continue changing this enum manually, while
-    # writing subtrahend render function.)
-    part_type: PartType = 'plate'
-    part_type: PartType = 'plate_and_caps'
-    #part_type: PartType = 'spacer'
-    #part_type: PartType = 'base'
-    
     # END HARDCODED CONFIGURATION
 
     # Process all config.
@@ -109,6 +103,10 @@ def build_part() -> Part:
 def main():
     """ Disobeying convention here while throwing things together.
     """
-    model = render(build_part())
+    keycaps = render(build_part('keycaps')).translate(0,0,120)
+    plate = render(build_part('plate')).translate(0,0,80)
+    spacer = render(build_part('spacer')).translate(0,0,40)
+    base = render(build_part('base'))
+    model = (keycaps + plate + spacer + base).translate(200,200,200)
     model.save_as_scad()
 main()

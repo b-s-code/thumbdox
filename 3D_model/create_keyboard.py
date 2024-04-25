@@ -28,15 +28,7 @@ def _world_transform(column_group_params: ColumnGroupParams,
 
 def render(part: Part) ->  _OpenSCADObject:
     """ The top-level render function. """
-    
-    resultant: _OpenSCADObject = _render_minuend(part)
-    if part.part_type == "plate_and_caps":
-        resultant += _render_keycaps(part)
-        part.part_type = 'plate'
-        resultant -= _render_subtrahend(part)
-    else:
-        resultant -= _render_subtrahend(part)
-
+    resultant: _OpenSCADObject = _render_minuend(part) - _render_subtrahend(part)
     return resultant
 
 def _render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
@@ -92,12 +84,24 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
         Gives minuend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
+    # We get less branching logic here by just farming out keycap minuend construction
+    # to a separate function.
+    if (part.part_type == "keycaps"):
+        return _render_keycaps(part)
+
     minuend: _OpenSCADObject = cube(0, 0, 0)
     num_column_groups: int = range(len(part.column_groups))
-    # Finger column group minuend in red, thumb column group minuend in blue.
-    colors = ('red', 'blue')
+    
+    # In an exploded view, it's nice if adjacent parts can be differentiated visually.
+    part_color = 'red'
+    if (part.part_type == 'spacer'):
+        part_color = 'blue'
+
     for i in num_column_groups:
-        minuend += _render_minuend_column_group(part, i).color(colors[i])
+        # Can instead have a list of colours, passing list elements to color() below,
+        # if wanting to differentiate the sections of the part constructed for different
+        # column groups.
+        minuend += _render_minuend_column_group(part, i).color(part_color)
     return minuend
 
 def _render_subtrahend(part: Part) -> _OpenSCADObject:
@@ -118,6 +122,8 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
 
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
+    if (part.part_type in ("keycaps", "base")):
+        return subtrahend
 
     # Define a prism representing one key switch hole.  The prism is
     # transformed within the object space of the key's entire space (i.e. in MX
@@ -154,18 +160,18 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
          hole_prism_uncentered = hole_prism_uncentered_plate
     elif (part.part_type == "spacer"):
          hole_prism_uncentered = hole_prism_uncentered_spacer
-    elif (part.part_type == "base"):
-        return subtrahend
     else:
         raise ValueError
 
+
     # Center hole within key space.  Colour the hole for visibility against
     # plate.
+    hole_color = 'pink'
     offset_mm: float = (MX_Key.keycap_space_side_length_mm
         - MX_Key.switch_hole_side_length_mm) / 2
     hole_prism_centered = (hole_prism_uncentered
                            .translate(offset_mm, offset_mm, 0)
-                           .color('yellow'))
+                           .color(hole_color))
 
     for column_group in part.column_groups:
         switch_hole_matrix: _OpenSCADObject = cube(0, 0, 0)
@@ -241,8 +247,10 @@ def _get_keycap_centered(keycap_units: int,
     # plate.
     offset_mm: float = (MX_Key.keycap_space_side_length_mm
         - MX_Key.keycap_side_length_mm) / 2
-    keycap_color = 'green'
-    keycap_opacity = 0.5
+    keycap_color = 'white'
+    # Set to less than 1.0 if need transparency.  This can be useful for checking switch
+    # holes are positioned as expected under keycaps.
+    keycap_opacity = 1.0
     keycap_prism_centered = (keycap_prism_uncentered
                            .translate(offset_mm, offset_mm, 0)
                            .color(keycap_color, keycap_opacity))
