@@ -121,6 +121,9 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         has been transformed into world space.
     """
     # TODO : account for MCU cable, possible TRRS etc.
+    # TODO : make spacer subtrahend one single path component.  The current
+    # subtrahend for the spacer does not physically permit the thumb key
+    # switches to be wired to the rest of the electronics.
 
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)

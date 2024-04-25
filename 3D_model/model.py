@@ -103,10 +103,17 @@ def build_part(part_type: PartType) -> Part:
 def main():
     """ Disobeying convention here while throwing things together.
     """
-    keycaps = render(build_part('keycaps')).translate(0,0,120)
-    plate = render(build_part('plate')).translate(0,0,80)
-    spacer = render(build_part('spacer')).translate(0,0,40)
-    base = render(build_part('base'))
-    model = (keycaps + plate + spacer + base).translate(200,200,200)
+    parts: list[_OpenSCADObject] = [
+        render(build_part('base')),
+        render(build_part('spacer')),
+        render(build_part('plate')),
+        render(build_part('keycaps'))
+    ]
+
+    model = cube(0,0,0)
+    # Chosen for being able to see separate parts, not for them being flush.
+    explosion_distance: float = 20
+    for i in range(len(parts)):
+        model += parts[i].translate(0,0,i * explosion_distance)
     model.save_as_scad()
 main()
