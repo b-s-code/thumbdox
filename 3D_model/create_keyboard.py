@@ -28,7 +28,8 @@ def _world_transform(column_group_params: ColumnGroupParams,
 
 def render(part: Part) ->  _OpenSCADObject:
     """ The top-level render function. """
-    resultant: _OpenSCADObject = _render_minuend(part) - _render_subtrahend(part)
+    resultant: _OpenSCADObject = (_render_minuend(part)
+                                 - _render_subtrahend(part))
     return resultant
 
 def _render_minuend_column_group(part: Part, i: int) -> _OpenSCADObject:
@@ -86,7 +87,8 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
     """
     # TODO : account for joinery of parts (bolts, glued areas, etc).
     # TODO : account necessary z-length for wiring in spacer part.
-    # We get less branching logic here by just farming out keycap minuend construction
+    # We get less branching logic here by just farming out keycap minuend
+    # construction
     # to a separate function.
     if (part.part_type == "keycaps"):
         return _render_keycaps(part)
@@ -94,15 +96,16 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
     minuend: _OpenSCADObject = cube(0, 0, 0)
     num_column_groups: int = range(len(part.column_groups))
     
-    # In an exploded view, it's nice if adjacent parts can be differentiated visually.
+    # In an exploded view, it's nice if adjacent parts can be differentiated
+    # visually.
     part_color = 'red'
     if (part.part_type == 'spacer'):
         part_color = 'blue'
 
     for i in num_column_groups:
-        # Can instead have a list of colours, passing list elements to color() below,
-        # if wanting to differentiate the sections of the part constructed for different
-        # column groups.
+        # Can instead have a list of colours, passing list elements to color()
+        # below, if wanting to differentiate the sections of the part
+        # constructed for different column groups.
         minuend += _render_minuend_column_group(part, i).color(part_color)
     return minuend
 
@@ -232,13 +235,13 @@ def _get_keycap_centered(keycap_units: int,
         the long side of the keycap runs parallel to the x-axis.
 
         Note that the "keycap" is really just an extruded rectangle.
-        It has no "curve", nor vertical taper.  It is intended only to be viewed
-        for diagnosing and avoiding keycap collisions by eye.
+        It has no "curve", nor vertical taper.  It is intended only to be
+        viewed for diagnosing and avoiding keycap collisions by eye.
     """
     # Define a prism representing one keycap.  The prism is
     # transformed within the object space of the key's entire space (i.e. in MX
-    # key systems, for a 1u keycap, this would be the 19.05mm by 19.05mm square),
-    # to be centered within the key's entire space.
+    # key systems, for a 1u keycap, this would be the 19.05mm by 19.05mm
+    # square), to be centered within the key's entire space.
 
     # Prevent z-fighting with plate.
     z_buffer_mm: float = 5
@@ -253,8 +256,8 @@ def _get_keycap_centered(keycap_units: int,
     offset_mm: float = (MX_Key.keycap_space_side_length_mm
         - MX_Key.keycap_side_length_mm) / 2
     keycap_color = 'white'
-    # Set to less than 1.0 if need transparency.  This can be useful for checking switch
-    # holes are positioned as expected under keycaps.
+    # Set to less than 1.0 if need transparency.  This can be useful for
+    # checking switch holes are positioned as expected under keycaps.
     keycap_opacity = 1.0
     keycap_prism_centered = (keycap_prism_uncentered
                            .translate(offset_mm, offset_mm, 0)
@@ -302,7 +305,8 @@ def _render_keycaps(part: Part) -> _OpenSCADObject:
                                   + column_group
                                     .column_group_params
                                     .top_padding_mm)
-                # Transform a new keycap prism into the ColumnGroup's object space.
+                # Transform a new keycap prism into the ColumnGroup's object
+                # space.
                 keycap_matrix += (_get_keycap_centered(
                                   column.key_length_U,
                                   part.thickness_mm)
