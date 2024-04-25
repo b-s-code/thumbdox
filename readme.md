@@ -2,22 +2,18 @@
 
 The ThumbDox is a (WIP) split keyboard based on the [ErgoDox](https://www.ergodox.io/).
 
-![img](/docs/design/images/engine_rebuild/LHS_and_exploded_view.png)
+![img](/docs/design/images/LHS_and_exploded_view.png)
 
 My aims in producing ThumbDox:
 
-1.  Eliminate the many keys I do not use.
-2.  Retain the two 2u thumb keys, in their current position, which are very comfortable for me to use.
+1.  Eliminate most of the keys I don't use.
+2.  Retain the two 2U thumb keys.
 3.  Document the design and production of the keyboard.  Many existing projects are similar, but I could not find anything exactly like what I wanted.  Perhaps showing my process here may save someone else reinventing the ThumbDox.
 
 ## Similar projects
 
-[ErgoDox](https://www.ergodox.io/)
+[ErgoDox](https://www.ergodox.io/) [Squiggle](https://github.com/ibnuda/Squiggle) [Zen](https://legonut.gitbooks.io/zen-keyboard/content/) [Gergo](https://qmk.fm/keyboards/gergo/)
 
-[Squiggle](https://github.com/ibnuda/Squiggle)
+## Development
 
-[Zen](https://legonut.gitbooks.io/zen-keyboard/content/)
-
-[Gergo](https://qmk.fm/keyboards/gergo/)
-
-
+See [](docs/design/development) for details on modifying/compiling the Python source for the 3D model into OpenSCAD code.
