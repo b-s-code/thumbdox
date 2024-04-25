@@ -260,8 +260,6 @@ def _render_keycaps(part: Part) -> _OpenSCADObject:
         Gives keycaps for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
-    # TODO : support >1u keycaps.
-
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     keycaps: _OpenSCADObject = cube(0, 0, 0)
 
