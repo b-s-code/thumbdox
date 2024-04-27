@@ -22,10 +22,10 @@ def build_part(part_type: PartType) -> Part:
     # Actual input data for finger column group.
     # Nonzero padding means that the spacer part actually fit to exist
     # in the real world.
-    finger_col_gp_top_padding_mm: float = 3.0
-    finger_col_gp_bottom_padding_mm: float = 3.0
-    finger_col_gp_left_padding_mm: float = 3.0
-    finger_col_gp_right_padding_mm: float = 3.0
+    finger_col_gp_top_padding_mm: float = 9.0
+    finger_col_gp_bottom_padding_mm: float = 9.0
+    finger_col_gp_left_padding_mm: float = 9.0
+    finger_col_gp_right_padding_mm: float = 9.0
     finger_col_gp_x_start_pos: float = 0.0
     finger_col_gp_y_start_pos: float = 0.0
     finger_col_gp_rotation_CW_degrees: float = 0.0
@@ -41,10 +41,10 @@ def build_part(part_type: PartType) -> Part:
     # Actual input data for thumb column group.
     # Nonzero padding means that the spacer part actually fit to exist
     # in the real world.
-    thumb_col_gp_top_padding_mm: float = 3.0
-    thumb_col_gp_bottom_padding_mm: float = 3.0
-    thumb_col_gp_left_padding_mm: float = 3.0
-    thumb_col_gp_right_padding_mm: float = 3.0
+    thumb_col_gp_top_padding_mm: float = 9.0
+    thumb_col_gp_bottom_padding_mm: float = 9.0
+    thumb_col_gp_left_padding_mm: float = 9.0
+    thumb_col_gp_right_padding_mm: float = 9.0
     thumb_col_gp_x_start_pos: float = 60.0
     thumb_col_gp_y_start_pos: float = 96.5
     thumb_col_gp_rotation_CW_degrees: float = 30.0

@@ -123,10 +123,9 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         Gives subtrahend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
-    # TODO : account for MCU cable, possible TRRS etc.
-    # TODO : make spacer subtrahend one single path component.  The current
-    # subtrahend for the spacer does not physically permit the thumb key
-    # switches to be wired to the rest of the electronics.
+    # TODO : spacer additional subtrahends:
+    # (1) MCU (2) MCU cable (3) TRRS jack (4) space permitting thumb key
+    # switches to be wired to everything else.
 
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
@@ -148,7 +147,7 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
     
     # Bigger than MX_Key.keycap_space_side_length_mm because real world
     # experience implies wiring may extend beyond key space boundaries.
-    padding_around_keyspace_mm: float = 3 # For spacer part only.
+    padding_around_keyspace_mm: float = 10.0 # For spacer part only.
     spacer_part_key_space_allocation_mm: float = (
             MX_Key.keycap_space_side_length_mm
             + padding_around_keyspace_mm)
@@ -170,7 +169,6 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
          hole_prism_uncentered = hole_prism_uncentered_spacer
     else:
         raise ValueError
-
 
     # Center hole within key space.  Colour the hole for visibility against
     # plate.
