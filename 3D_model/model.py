@@ -51,6 +51,8 @@ def build_part(part_type: PartType) -> Part:
     
     # Actual input data for part.
     part_thickness_mm: float = 4
+    if part_type == "spacer":
+        part_thickness_mm: float = 8
     # END HARDCODED CONFIGURATION
 
     # Process all config.
@@ -114,6 +116,11 @@ def main():
     # Chosen for being able to see separate parts, not for them being flush.
     explosion_distance: float = 20
     for i in range(len(parts)):
-        model += parts[i].translate(0,0,i * explosion_distance)
+        if i > 1:
+            model += parts[i].translate(0,0,i * explosion_distance)
+        elif i == 1:
+            model += parts[i].translate(0,0,build_part("base").thickness_mm)
+        else:
+            model += parts[i]
     model.save_as_scad()
 main()
