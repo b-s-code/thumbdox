@@ -123,9 +123,6 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         Gives subtrahend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
-    # TODO : spacer additional subtrahends:
-    # (1) MCU (2) MCU cable (3) TRRS jack (4) space permitting thumb key
-    # switches to be wired to everything else.
 
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
@@ -223,6 +220,23 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
             column_group.column_group_params, switch_hole_matrix)
         
         subtrahend += world_space_switch_hole_matrix
+        
+        # TODO : Some bits need to be cut out from the spacer for the 
+        # (1) MCU (2) MCU cable (3) TRRS jack (4) space permitting thumb key
+        # switches to be wired to everything else.
+        # TODO : consider locating this elsewhere.
+        spacer_cutouts: list[_OpenSCADObject] = [
+            cube(30,6,100).translate(60, 90, 0)
+        ]
+        world_space_spacer_cutouts: list[_OpenSCADObject] = [
+            _world_transform(column_group.column_group_params, cutout)
+            for cutout in spacer_cutouts
+        ]
+        world_space_spacer_cutout: _OpenSCADObject = cube(0,0,0)
+        for cutout in world_space_spacer_cutouts:
+            world_space_spacer_cutout += cutout
+        if part.part_type == "spacer":
+            subtrahend += world_space_spacer_cutout
 
     return subtrahend
 

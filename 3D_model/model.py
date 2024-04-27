@@ -50,8 +50,11 @@ def build_part(part_type: PartType) -> Part:
     thumb_col_gp_rotation_CW_degrees: float = 30.0
     
     # Actual input data for part.
+    # TODO : work out appropriate thickness for switch plate.
     part_thickness_mm: float = 4
     if part_type == "spacer":
+        # TODO : work out how much spacer height is needed to accommodate
+        # wiring, MCU, TRRS jacks, protruding parts of keyswitches.
         part_thickness_mm: float = 8
     # END HARDCODED CONFIGURATION
 
