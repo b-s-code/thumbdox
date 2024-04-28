@@ -51,10 +51,15 @@ def build_part(part_type: PartType) -> Part:
     
     # Actual input data for part.
     # TODO : work out appropriate thickness for switch plate.
+    # Some good data on protrusion lengths of various parts of an MX switch here.
+    # https://www.cherry-world.com/cherry-mx/developer
+    # https://content.cherry-world.com/fileadmin/media/Components/Keyboard/MXswitches3.svg?v=1665663208
     part_thickness_mm: float = 4
     if part_type == "spacer":
         # TODO : work out how much spacer height is needed to accommodate
         # wiring, MCU, TRRS jacks, protruding parts of keyswitches.
+        # A typical TRRS jack is probaby taller than  most MCUs, can probably
+        # use a TRRS jack part as a lower bound for height required in spacer.
         part_thickness_mm: float = 8
     # END HARDCODED CONFIGURATION
 
