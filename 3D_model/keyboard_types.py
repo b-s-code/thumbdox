@@ -88,9 +88,13 @@ class MX_Key:
     keycap_side_length_mm = 18
     # Provides breathing space between keycaps.
     keycap_space_side_length_mm = 19.05
+    # From Cherry MX data.
+    # See https://www.cherry-world.com/cherry-mx/developer
+    keyswitch_descend_below_switch_plate_top_mm = 8.3
 
     @staticmethod
     def keycap_side_length(num_units: int) -> float:
+        # TODO : put units in name.
         """ Evaluates the length in mm of the long side of a keycap, which
             may be more than 1U long.
         """
@@ -101,4 +105,36 @@ class MX_Key:
         subtrahend: float = (MX_Key.keycap_space_side_length_mm
                             - MX_Key.keycap_side_length_mm)
         return full_length_of_space - subtrahend
+    
+    @staticmethod
+    def keycap_protrusion_mm(switch_plate_thickness_mm: float) -> float:
+        """ Returns the number of mm that the keyswitch descends
+            below the bottom of the switch plate.
+        """    
+        return (MX_Key.keyswitch_descend_below_switch_plate_top_mm
+               - switch_plate_thickness_mm)
 
+class MCU:
+    """ Describes physical dimensions of a rpi pcio, obtained from a mix
+        of sources, without giving consideration to tolerances +-.
+    """
+    # Imperfect.  From measuring a rpi pico with a ruler. Includes USB jack.
+    # The plugs on many cables would be thicker than this though.
+    # In other words, if not considering plug height, the jack should really
+    # be placed at the very edge of the spacer.
+    thickness_mm: float = 4.0
+    
+    # TODO : account for width of outwards-facing MCU edge.
+
+class TRRS_Jack:
+    """ Describes physical dimensions of an ordinary TRRS jack, obtained from a
+        mix of sources, giving only rough consideration to tolerances +-.
+    """
+    # A typical TRRS jack is probaby taller than  most MCUs, can probably
+    # use a TRRS jack part as a lower bound for height required in spacer.
+    # This distance provides a small buffer around the jack, plus its pins.
+    # This would allow the jack to be glued into a cutout at the edge of
+    # the spacer.
+    height_mm: float = 8.0
+    
+    # TODO : account for width (5mm + buffer) for TRRS jack.

@@ -50,38 +50,18 @@ def build_part(part_type: PartType) -> Part:
     thumb_col_gp_rotation_CW_degrees: float = 30.0
     
     # Actual input data for part.
-    # Some good data on protrusion lengths of various parts of an MX switch:
-    # https://www.cherry-world.com/cherry-mx/developer
-    # https://content.cherry-world.com/fileadmin/media/Components/Keyboard/MXswitches3.svg?v=1665663208
     part_thickness_mm: float = 5
+    switch_plate_thickness_mm: float = 5
+    if part_type == "plate":
+        part_thickness_mm == switch_plate_thickness_mm
     if part_type == "spacer":
-        # From Cherry MX data.
-        keyswitch_descend_below_switch_plate_top_mm = 8.3
-
-        # Protrusion below bottom of switch plate.
-        keyswitch_protrusion_mm = (keyswitch_descend_below_switch_plate_top_mm
-                                  - part_thickness_mm)
-
-        # Imperfect.  From measuring a rpi pico with a ruler. Includes USB jack.
-        # The plugs on many cables would be thicker than this though.
-        # In other words, if not considering plug height, the jack should really
-        # be placed at the very edge of the spacer.
-        # TODO : account for width of outwards-facing MCU edge elsewhere.
-        mcu_thickness_mm: float = 4.0
-
-        # A typical TRRS jack is probaby taller than  most MCUs, can probably
-        # use a TRRS jack part as a lower bound for height required in spacer.
-        # This distance provides a small buffer around the jack, plus its pins.
-        # This would allow the jack to be glued into a cutout at the edge of
-        # the spacer.
-        # TODO : account for width (5mm + buffer) for TRRS jack elsewhere.
-        TRRS_jack_height_mm: float = 8.0
-
         # Seems like the right expression for a spacious build to me.
         # I'm assuming wiring will fit happily within this space.  So, if
         # anything, the thickness of the spacer could even be **increased**.
-        part_thickness_mm: float = (max(keyswitch_protrusion_mm
-                                   + mcu_thickness_mm, TRRS_jack_height_mm)
+        part_thickness_mm: float = (max(MX_Key.keycap_protrusion_mm(
+                                            switch_plate_thickness_mm)
+                                   + MCU.thickness_mm,
+                                   TRRS_Jack.height_mm)
                                    + 1.0)
     # END HARDCODED CONFIGURATION
 

@@ -222,8 +222,7 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         # Some bits need to be cut out from the spacer, which are not
         # appropriate to remove from other parts.
         if part.part_type == "spacer":
-            subtrahend += _world_transform(column_group.column_group_params,
-                          _get_spacer_cutouts())
+            subtrahend += _get_spacer_cutouts()
 
     return subtrahend
 
@@ -236,7 +235,11 @@ def _get_spacer_cutouts() -> _OpenSCADObject:
     """
     spacer_cutouts: list[_OpenSCADObject] = [
         # (4) Removes island between finger keys and thumb keys.
-        cube(30,6,100).translate(60, 90, 0) 
+        # These values are all just tuned by eye, based on the specific
+        # geometry of the keyboard created thus far.
+        cube(30,6,100).translate(60, 90, 0),
+        # (3) TRRS jack. TODO
+        cube(30,30,30).translate(-1, 50, 0)
     ]
     spacer_cutout: _OpenSCADObject = cube(0,0,0)
     for elt in spacer_cutouts:
