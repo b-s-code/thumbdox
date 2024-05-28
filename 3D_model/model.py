@@ -55,6 +55,9 @@ def build_part(part_type: PartType) -> Part:
     if part_type == "plate":
         part_thickness_mm == switch_plate_thickness_mm
     if part_type == "spacer":
+        # A typical TRRS jack is probaby taller than  most MCUs, can probably
+        # use a TRRS jack part as a lower bound for height required in spacer.
+
         # Seems like the right expression for a spacious build to me.
         # I'm assuming wiring will fit happily within this space.  So, if
         # anything, the thickness of the spacer could even be **increased**.

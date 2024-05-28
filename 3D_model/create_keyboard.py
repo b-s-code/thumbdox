@@ -238,8 +238,8 @@ def _get_spacer_cutouts() -> _OpenSCADObject:
         # These values are all just tuned by eye, based on the specific
         # geometry of the keyboard created thus far.
         cube(30,6,100).translate(60, 90, 0),
-        # (3) TRRS jack. TODO
-        cube(30,30,30).translate(-1, 50, 0)
+        # (3) TRRS jack. x-value is arbitrarily long.
+        cube(30, TRRS_Jack.width_mm, TRRS_Jack.height_mm).translate(-1, 78, 0)
     ]
     spacer_cutout: _OpenSCADObject = cube(0,0,0)
     for elt in spacer_cutouts:

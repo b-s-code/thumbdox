@@ -129,12 +129,13 @@ class MCU:
 class TRRS_Jack:
     """ Describes physical dimensions of an ordinary TRRS jack, obtained from a
         mix of sources, giving only rough consideration to tolerances +-.
+        Dimensions are listed for the purposes of allowing enough space for
+        the jack, not for the purposes of specifying its exact size.
     """
-    # A typical TRRS jack is probaby taller than  most MCUs, can probably
-    # use a TRRS jack part as a lower bound for height required in spacer.
     # This distance provides a small buffer around the jack, plus its pins.
     # This would allow the jack to be glued into a cutout at the edge of
     # the spacer.
     height_mm: float = 8.0
     
-    # TODO : account for width (5mm + buffer) for TRRS jack.
+    # Includes an approximate 0.75mm buffer each side for glue or similar.
+    width_mm: float = 6.5
