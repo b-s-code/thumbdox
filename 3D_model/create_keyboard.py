@@ -85,10 +85,9 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
         Gives minuend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
-    # TODO : account for joinery of parts (bolts, glued areas, etc).
+    # TODO : account for joinery of parts (i.e. bolts or glued areas).
     # We get less branching logic here by just farming out keycap minuend
-    # construction
-    # to a separate function.
+    # construction to a separate function.
     if (part.part_type == "keycaps"):
         return _render_keycaps(part)
 
@@ -220,24 +219,29 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         
         subtrahend += world_space_switch_hole_matrix
         
-        # TODO : Some bits need to be cut out from the spacer for the 
-        # (1) MCU (2) MCU cable (3) TRRS jack (4) space permitting thumb key
-        # switches to be wired to everything else.
-        # TODO : consider locating this elsewhere.
-        spacer_cutouts: list[_OpenSCADObject] = [
-            cube(30,6,100).translate(60, 90, 0)
-        ]
-        world_space_spacer_cutouts: list[_OpenSCADObject] = [
-            _world_transform(column_group.column_group_params, cutout)
-            for cutout in spacer_cutouts
-        ]
-        world_space_spacer_cutout: _OpenSCADObject = cube(0,0,0)
-        for cutout in world_space_spacer_cutouts:
-            world_space_spacer_cutout += cutout
+        # Some bits need to be cut out from the spacer, which are not
+        # appropriate to remove from other parts.
         if part.part_type == "spacer":
-            subtrahend += world_space_spacer_cutout
+            subtrahend += _world_transform(column_group.column_group_params,
+                          _get_spacer_cutouts())
 
     return subtrahend
+
+def _get_spacer_cutouts() -> _OpenSCADObject:
+    """ Returns a object composed of prisms representing pieces of
+        material to remove from the spacer.  This provides space for:
+        (1) MCU (2) MCU cable (3) TRRS jack (4) space permitting thumb key
+        switches to be wired to everything else. 
+        # TODO : make this come true.
+    """
+    spacer_cutouts: list[_OpenSCADObject] = [
+        # (4) Removes island between finger keys and thumb keys.
+        cube(30,6,100).translate(60, 90, 0) 
+    ]
+    spacer_cutout: _OpenSCADObject = cube(0,0,0)
+    for elt in spacer_cutouts:
+        spacer_cutout += elt
+    return spacer_cutout
 
 def _get_keycap_centered(keycap_units: int,
                          plate_thickness_mm: float) -> _OpenSCADObject:
