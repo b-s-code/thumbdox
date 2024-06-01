@@ -237,13 +237,26 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
 
 def _get_bolt_holes() -> _OpenSCADObject:
     """ Returns a object composed of cylinders representing bolt holes. """
+    # TODO : if I ever get bored, this hardcoded data could be moved
+    # to model.py
+    
     # Radius derived from *outer* diameter.
     M3_bolt_radius_mm: float = 3.0 / 2
+
+    # Positions mentioned in comments are with respect to LHS half of keyboard.
+    # z component of translations prevents z-fighting.
     cylinders: list[_OpenSCADObject] = [
-        # TODO : continue replacing dummy hole with a set of 4 realistic
-        # bolt holes.
-        # z component of translation prevents z-fighting.
-        cylinder(r=M3_bolt_radius_mm, h=15).translate(3, 3, -1)
+        # TODO : check all these bolt hole positions are compatibles with keycap
+        # positions.  Do this by finding out the diameter of whichever nuts will
+        # be used with the M3 screws, and hacking in some diagnostic rendering.
+        # Top left.
+        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 4.5, -1),
+        # Bottom left.
+        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(99, 4.5, -1),
+        # Bottom right. TODO
+        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(90, 138, -1),
+        # Top right. TODO
+        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 113.5, -1)
     ]
     combined_cylinders: _OpenSCADObject = cube(0,0,0)
     for elt in cylinders:
@@ -257,6 +270,8 @@ def _get_spacer_cutouts() -> _OpenSCADObject:
         switches to be wired to everything else. 
         # TODO : make this come true.
     """
+    # TODO : if I ever get bored, this hardcoded data could be moved
+    # to model.py
     spacer_cutouts: list[_OpenSCADObject] = [
         # (4) Removes island between finger keys and thumb keys.
         # These values are all just tuned by eye, based on the specific
