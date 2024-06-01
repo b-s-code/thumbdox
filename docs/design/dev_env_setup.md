@@ -2,7 +2,7 @@
 
 The [solidpython2 library](https://github.com/jeff-dh/SolidPython) is used to generate OpenSCAD code.
 
-OpenSCAD is used to create files for 3D printing.
+OpenSCAD is used to define the 3D models.
 
 ## Setup steps
 
@@ -30,7 +30,7 @@ $ ./venv/bin/python3 -m pip install -r requirements.txt
 
 ### Editing the 3D model source
 
-The source code for the 3D model is `3D_model/model.py`.  Editing that Python file is necessary to change the model (it is not intended that the generated OpenSCAD code be manually written to).
+The source code for the 3D model is `3D_model/model.py`.  Editing that Python file is necessary to change the model (it is not intended that this project's generated OpenSCAD code be manually edited).
 
 ### Compiling the 3D model source to OpenSCAD code
 

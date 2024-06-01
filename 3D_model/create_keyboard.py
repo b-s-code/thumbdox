@@ -85,7 +85,6 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
         Gives minuend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
-    # TODO : account for joinery of parts (i.e. bolts or glued areas).
     # We get less branching logic here by just farming out keycap minuend
     # construction to a separate function.
     if (part.part_type == "keycaps"):
@@ -121,6 +120,8 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         Gives subtrahend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
+    # TODO : account for joins (i.e. bolt holes).  This may require early return
+    # for base part below to be changed.
 
     # Accumulator for the sum of world space ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
