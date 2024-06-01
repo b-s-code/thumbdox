@@ -112,19 +112,27 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         Returned object is either:
           - a disjoint matrix of rectangular prisms representing
             the volumes to punch out of the switch plate to create holes
-            for all key switches in all column groups,
+            for all key switches in all column groups, plus cylinders for
+            bolt holes,
           - one big prismic volume to punch out of the spacer to make its
-            space, or
-          - very little, in the case of the base plate.
+            space, plus cylinders for bolt holes, plus volumes to be removed
+            for cable connectors, or
+          - just cylinders for bolt holes, in the case of the base plate.
  
         Gives subtrahend for LHS of the keyboard only.  The returned object
         has been transformed into world space.
     """
-    # TODO : account for joins (i.e. bolt holes).  This may require early return
-    # for base part below to be changed.
-
-    # Accumulator for the sum of world space ColumnGroup hole prism matrices.
+    # Accumulator object for all sub-subtrahends.
+    # E.g. for the switch plate, this includes the the sum of world space
+    # ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
+    
+    # Parts need to be joined.  Here, bolts have been chosen.  This requires
+    # bolt holes in all parts which will be joined.
+    if part.part_type in {"spacer", "plate", "base"}:
+        subtrahend += _get_bolt_holes()
+
+    # Nothing else should be cut out of these parts.
     if (part.part_type in ("keycaps", "base")):
         return subtrahend
 
@@ -224,9 +232,6 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         # appropriate to remove from other parts.
         if part.part_type == "spacer":
             subtrahend += _get_spacer_cutouts()
-        if part.part_type in {"spacer", "plate", "base"}:
-            # TODO : make this code reachable for base part.
-            subtrahend += _get_bolt_holes()
 
     return subtrahend
 
@@ -234,7 +239,8 @@ def _get_bolt_holes() -> _OpenSCADObject:
     """ Returns a object composed of cylinders representing bolt holes. """
     cylinders: list[_OpenSCADObject] = [
         # TODO : replace dummy hole with something realistic.
-        cylinder(r=10, h=10)
+        # Tranlsation prevents z-fighting.
+        cylinder(r=10, h=15).translate(0, 0, -1)
     ]
     combined_cylinders: _OpenSCADObject = cube(0,0,0)
     for elt in cylinders:

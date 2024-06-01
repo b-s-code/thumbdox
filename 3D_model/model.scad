@@ -18,7 +18,13 @@ union() {
 				}
 			}
 		}
-		cube(size = [0, 0, 0]);
+		union() {
+			cube(size = [0, 0, 0]);
+			cube(size = [0, 0, 0]);
+			translate(v = [0, 0, -1]) {
+				cylinder(h = 15, r = 10);
+			}
+		}
 	}
 	translate(v = [0, 0, 5]) {
 		difference() {
@@ -41,6 +47,10 @@ union() {
 			}
 			union() {
 				cube(size = [0, 0, 0]);
+				cube(size = [0, 0, 0]);
+				translate(v = [0, 0, -1]) {
+					cylinder(h = 15, r = 10);
+				}
 				translate(v = [0.0, 0.0, 0]) {
 					rotate(a = [0, 0, -0.0]) {
 						union() {
@@ -226,8 +236,6 @@ union() {
 				translate(v = [-1, 78, 0]) {
 					cube(size = [30, 6.5, 8.0]);
 				}
-				cube(size = [0, 0, 0]);
-				cylinder(h = 10, r = 10);
 				translate(v = [60.0, 96.5, 0]) {
 					rotate(a = [0, 0, -30.0]) {
 						union() {
@@ -260,8 +268,6 @@ union() {
 				translate(v = [-1, 78, 0]) {
 					cube(size = [30, 6.5, 8.0]);
 				}
-				cube(size = [0, 0, 0]);
-				cylinder(h = 10, r = 10);
 			}
 		}
 	}
@@ -286,6 +292,10 @@ union() {
 			}
 			union() {
 				cube(size = [0, 0, 0]);
+				cube(size = [0, 0, 0]);
+				translate(v = [0, 0, -1]) {
+					cylinder(h = 15, r = 10);
+				}
 				translate(v = [0.0, 0.0, 0]) {
 					rotate(a = [0, 0, -0.0]) {
 						union() {
@@ -464,8 +474,6 @@ union() {
 						}
 					}
 				}
-				cube(size = [0, 0, 0]);
-				cylinder(h = 10, r = 10);
 				translate(v = [60.0, 96.5, 0]) {
 					rotate(a = [0, 0, -30.0]) {
 						union() {
@@ -491,8 +499,6 @@ union() {
 						}
 					}
 				}
-				cube(size = [0, 0, 0]);
-				cylinder(h = 10, r = 10);
 			}
 		}
 	}
