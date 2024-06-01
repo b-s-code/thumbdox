@@ -21,8 +21,8 @@ union() {
 		union() {
 			cube(size = [0, 0, 0]);
 			cube(size = [0, 0, 0]);
-			translate(v = [0, 0, -1]) {
-				cylinder(h = 15, r = 10);
+			translate(v = [3, 3, -1]) {
+				cylinder(h = 15, r = 1.5);
 			}
 		}
 	}
@@ -48,8 +48,8 @@ union() {
 			union() {
 				cube(size = [0, 0, 0]);
 				cube(size = [0, 0, 0]);
-				translate(v = [0, 0, -1]) {
-					cylinder(h = 15, r = 10);
+				translate(v = [3, 3, -1]) {
+					cylinder(h = 15, r = 1.5);
 				}
 				translate(v = [0.0, 0.0, 0]) {
 					rotate(a = [0, 0, -0.0]) {
@@ -293,8 +293,8 @@ union() {
 			union() {
 				cube(size = [0, 0, 0]);
 				cube(size = [0, 0, 0]);
-				translate(v = [0, 0, -1]) {
-					cylinder(h = 15, r = 10);
+				translate(v = [3, 3, -1]) {
+					cylinder(h = 15, r = 1.5);
 				}
 				translate(v = [0.0, 0.0, 0]) {
 					rotate(a = [0, 0, -0.0]) {

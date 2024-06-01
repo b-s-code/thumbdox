@@ -237,10 +237,13 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
 
 def _get_bolt_holes() -> _OpenSCADObject:
     """ Returns a object composed of cylinders representing bolt holes. """
+    # Radius derived from *outer* diameter.
+    M3_bolt_radius_mm: float = 3.0 / 2
     cylinders: list[_OpenSCADObject] = [
-        # TODO : replace dummy hole with something realistic.
-        # Tranlsation prevents z-fighting.
-        cylinder(r=10, h=15).translate(0, 0, -1)
+        # TODO : continue replacing dummy hole with a set of 4 realistic
+        # bolt holes.
+        # z component of translation prevents z-fighting.
+        cylinder(r=M3_bolt_radius_mm, h=15).translate(3, 3, -1)
     ]
     combined_cylinders: _OpenSCADObject = cube(0,0,0)
     for elt in cylinders:
