@@ -1,5 +1,5 @@
 from solid2.core.builtins.openscad_primitives import _OpenSCADObject
-from solid2 import cube
+from solid2 import cube, cylinder
 from keyboard_types import *
 
 def _world_transform(column_group_params: ColumnGroupParams,
@@ -224,8 +224,22 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
         # appropriate to remove from other parts.
         if part.part_type == "spacer":
             subtrahend += _get_spacer_cutouts()
+        if part.part_type in {"spacer", "plate", "base"}:
+            # TODO : make this code reachable for base part.
+            subtrahend += _get_bolt_holes()
 
     return subtrahend
+
+def _get_bolt_holes() -> _OpenSCADObject:
+    """ Returns a object composed of cylinders representing bolt holes. """
+    cylinders: list[_OpenSCADObject] = [
+        # TODO : replace dummy hole with something realistic.
+        cylinder(r=10, h=10)
+    ]
+    combined_cylinders: _OpenSCADObject = cube(0,0,0)
+    for elt in cylinders:
+        combined_cylinders += elt
+    return combined_cylinders
 
 def _get_spacer_cutouts() -> _OpenSCADObject:
     """ Returns a object composed of prisms representing pieces of
