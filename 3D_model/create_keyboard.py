@@ -246,9 +246,6 @@ def _get_bolt_holes() -> _OpenSCADObject:
     # Positions mentioned in comments are with respect to LHS half of keyboard.
     # z component of translations prevents z-fighting.
     cylinders: list[_OpenSCADObject] = [
-        # TODO : check all these bolt hole positions are compatibles with keycap
-        # positions.  Do this by finding out the diameter of whichever nuts will
-        # be used with the M3 screws, and hacking in some diagnostic rendering.
         # Top left.
         cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 4.5, -1),
         # Bottom left.

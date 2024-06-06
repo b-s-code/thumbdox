@@ -15,8 +15,8 @@ TODO : populate additional details.
 |  | Cable to connect kebyoard to PC | | | | |
 |  | TRRS cable | | | | |
 |  | Plywood sheets | | | | |
-|  | M3 screws | 8 | | | |
-|  | M3 nuts | 8 | | | |
+|  | M3 screws.  Must have head diameter <= 6mm | 8 | | | |
+|  | M3 nuts.  Must have head diameter <= 6mm | 8 | | | |
 |  | Glue to fix MCU and TRRS jack in place | 8 | | | |
 |  | MX compatible key switches | 42 | | | |
 |  | | | | | |
