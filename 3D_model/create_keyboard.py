@@ -250,9 +250,9 @@ def _get_bolt_holes() -> _OpenSCADObject:
         cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 4.5, -1),
         # Bottom left.
         cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(99, 4.5, -1),
-        # Bottom right. TODO
+        # Bottom right.
         cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(90, 138, -1),
-        # Top right. TODO
+        # Top right.
         cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 113.5, -1)
     ]
     combined_cylinders: _OpenSCADObject = cube(0,0,0)
