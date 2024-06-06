@@ -94,7 +94,6 @@ class MX_Key:
 
     @staticmethod
     def arbit_long_keycap_side_length_mm(num_units: int) -> float:
-        # TODO : put units in name.
         """ Evaluates the length in mm of the long side of a keycap, which
             may be more than 1U long - arbitrarily long.
         """
