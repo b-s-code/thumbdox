@@ -124,6 +124,9 @@ class MCU:
     thickness_mm: float = 4.0
     
     # TODO : account for width of outwards-facing MCU edge.
+    # TODO : alternatively, consider not mounting the MCU.  It could sit loose
+    # in the spacer cavity, and a short USB type C to micro USB female-to-male
+    # adapter could be glued to the spacer, with the female side facing out.
 
 class TRRS_Jack:
     """ Describes physical dimensions of an ordinary TRRS jack, obtained from a
