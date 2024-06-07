@@ -114,7 +114,7 @@ class MX_Key:
                - switch_plate_thickness_mm)
 
 class MCU:
-    """ Describes physical dimensions of a rpi pcio, obtained from a mix
+    """ Describes physical dimensions of a rpi pico, obtained from a mix
         of sources, without giving consideration to tolerances +-.
     """
     # Imperfect.  From measuring a rpi pico with a ruler. Includes USB jack.
@@ -123,10 +123,42 @@ class MCU:
     # be placed at the very edge of the spacer.
     thickness_mm: float = 4.0
     
-    # TODO : account for width of outwards-facing MCU edge.
-    # TODO : alternatively, consider not mounting the MCU.  It could sit loose
-    # in the spacer cavity, and a short USB type C to micro USB female-to-male
-    # adapter could be glued to the spacer, with the female side facing out.
+    # This sketch illustrates the strategy for mounting the MCU, after all
+    # wires needing to be soldered to its pins have been soldered.
+    """
+                   Cable
+                   Cable
+                   Cable
+                   Cable
+                 CableCable           
+                 CableCable           
+                 CableCable           
+    SpacerSpacer CableCable SpacerSpacer
+    SpacerSpacer CableCable SpacerSpacer
+    SpacerSpacer   UsbUsb   SpacerSpacer
+    SpacerSpacer   UsbUsb   SpacerSpacer
+    SpacerSpacer            SpacerSpacer
+    SpacerSpacer    ⇓⇓⇓⇓    SpacerSpacer
+    SpacerSpacer            SpacerSpacer
+    SpacerSpacer   UsbUsb   SpacerSpacer
+    GlueGlueGlue   UsbUsb   GlueGlueGlue
+          McuMcuMcuMcuMcuMcuMcuMcu
+          McuMcuMcuMcuMcuMcuMcuMcu
+          McuMcuMcuMcuMcuMcuMcuMcu
+
+    Accordingly, we can specify what width of gap in the spacer is necessary
+    to allow a cable to be connected to the pico.  It is just the max width
+    of a typical micro USB cable, plus a little bit of buffer.  If this
+    distance is made smaller, it may be hard to insert the cable's connector.
+    If this distance is made larger, there may not be enough overlapping area
+    between the MCU and the spacer to apply glue to.
+    """
+    cable_slot_width_mm: float = 13.0
+
+    # Includes a (quite) small amount of buffer.  The actual slot height can
+    # be larger than this happily, but really should not be much smaller.
+    cable_slot_height_mm: float = 7.5 
+    # TODO : actually use the above values in the 3D model.
 
 class TRRS_Jack:
     """ Describes physical dimensions of an ordinary TRRS jack, obtained from a
