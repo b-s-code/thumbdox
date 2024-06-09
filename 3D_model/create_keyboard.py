@@ -278,7 +278,7 @@ def _get_spacer_cutouts() -> _OpenSCADObject:
         # (4) Removes island between finger keys and thumb keys.
         # These values are all just tuned by eye, based on the specific
         # geometry of the keyboard created thus far.
-        cube(30,6,100).translate(60, 90, 0)
+        cube(30,20,100).translate(60, 90, -1)
     ]
     spacer_cutout: _OpenSCADObject = cube(0,0,0)
     for elt in spacer_cutouts:
