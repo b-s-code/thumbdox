@@ -129,16 +129,11 @@ def main():
     # Chosen for being able to see separate parts, not for them being flush.
     explosion_distance: float = 20
     for i in range(len(parts)):
-        ## TODO : uncomment after MCU placement problem solved.
-        # if i > 1:
-        #     model += parts[i].translate(0,0,i * explosion_distance)
-        # elif i == 1:
-        #     model += parts[i].translate(0,0,build_part("base").thickness_mm)
-        # else:
-        #     model += parts[i]
-
-        # TODO : delete after MCU placement problem solved.
-        if i >= 1:
+        if i > 1:
             model += parts[i].translate(0,0,i * explosion_distance)
+        elif i == 1:
+            model += parts[i].translate(0,0,build_part("base").thickness_mm)
+        else:
+            model += parts[i]
     model.save_as_scad()
 main()
