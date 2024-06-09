@@ -118,7 +118,7 @@ def build_part(part_type: PartType) -> Part:
 def main():
     """ Disobeying convention here while throwing things together.
     """
-    model = cube(0,0,0)
+    model_LHS = cube(0,0,0)
     parts: list[_OpenSCADObject] = [
         render(build_part('base')),
         render(build_part('spacer')).translate(0,0,5),
@@ -126,6 +126,9 @@ def main():
         render(build_part('keycaps')).translate(0,0,5+10+5)
     ]
     for i in range(len(parts)):
-        model += parts[i]
+        model_LHS += parts[i]
+    model_RHS: _OpenSCADObject = model_LHS.mirror(1,0,0).rotate(0,0,200).translate(-54,300,0)
+
+    model: _OpenSCADObject = model_LHS + model_RHS
     model.save_as_scad()
 main()
