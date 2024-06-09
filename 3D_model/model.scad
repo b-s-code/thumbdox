@@ -254,8 +254,8 @@ union() {
 				translate(v = [-1, 88, -1]) {
 					cube(size = [30, 6.5, 100]);
 				}
-				translate(v = [60, 90, 0]) {
-					cube(size = [30, 6, 100]);
+				translate(v = [60, 90, -1]) {
+					cube(size = [30, 20, 100]);
 				}
 				translate(v = [60.0, 96.5, 0]) {
 					rotate(a = [0, 0, -30.0]) {
@@ -289,13 +289,13 @@ union() {
 				translate(v = [-1, 88, -1]) {
 					cube(size = [30, 6.5, 100]);
 				}
-				translate(v = [60, 90, 0]) {
-					cube(size = [30, 6, 100]);
+				translate(v = [60, 90, -1]) {
+					cube(size = [30, 20, 100]);
 				}
 			}
 		}
 	}
-	translate(v = [0, 0, 40]) {
+	translate(v = [0, 0, 15]) {
 		difference() {
 			union() {
 				cube(size = [0, 0, 0]);
@@ -535,7 +535,7 @@ union() {
 			}
 		}
 	}
-	translate(v = [0, 0, 60]) {
+	translate(v = [0, 0, 20]) {
 		difference() {
 			union() {
 				cube(size = [0, 0, 0]);
