@@ -263,19 +263,22 @@ def _get_bolt_holes() -> _OpenSCADObject:
 def _get_spacer_cutouts() -> _OpenSCADObject:
     """ Returns a object composed of prisms representing pieces of
         material to remove from the spacer.  This provides space for:
-        (1) MCU (2) MCU cable (3) TRRS jack (4) space permitting thumb key
-        switches to be wired to everything else. 
-        # TODO : make this come true.
+        (1) MCU USB connector (2) USB cable connector (3) TRRS jack
+        (4) space permitting thumb key switches to be wired to everything else.
     """
     # TODO : if I ever get bored, this hardcoded data could be moved
     # to model.py
     spacer_cutouts: list[_OpenSCADObject] = [
+        # (1)(2) TRRS jack. x-value is arbitrarily long.
+        cube(30, MCU.cable_slot_width_mm,100).translate(-1, 53, -1),
+
+        # (3) TRRS jack. x-value is arbitrarily long.
+        cube(30, TRRS_Jack.width_mm, 100).translate(-1, 88, -1),
+
         # (4) Removes island between finger keys and thumb keys.
         # These values are all just tuned by eye, based on the specific
         # geometry of the keyboard created thus far.
-        cube(30,6,100).translate(60, 90, 0),
-        # (3) TRRS jack. x-value is arbitrarily long.
-        cube(30, TRRS_Jack.width_mm, TRRS_Jack.height_mm).translate(-1, 78, 0)
+        cube(30,6,100).translate(60, 90, 0)
     ]
     spacer_cutout: _OpenSCADObject = cube(0,0,0)
     for elt in spacer_cutouts:
