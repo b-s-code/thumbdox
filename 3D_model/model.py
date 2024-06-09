@@ -65,7 +65,7 @@ def build_part(part_type: PartType) -> Part:
                                             switch_plate_thickness_mm)
                                    + MCU.thickness_mm,
                                    TRRS_Jack.height_mm)
-                                   + 1.0)
+                                   + 2.0)
     # END HARDCODED CONFIGURATION
 
     # Process all config.
