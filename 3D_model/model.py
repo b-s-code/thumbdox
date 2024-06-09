@@ -61,7 +61,7 @@ def build_part(part_type: PartType) -> Part:
         # Seems like the right expression for a spacious build to me.
         # I'm assuming wiring will fit happily within this space.  So, if
         # anything, the thickness of the spacer could even be **increased**.
-        part_thickness_mm: float = (max(MX_Key.keycap_protrusion_mm(
+        part_thickness_mm = (max(MX_Key.keycap_protrusion_mm(
                                             switch_plate_thickness_mm)
                                    + MCU.thickness_mm,
                                    TRRS_Jack.height_mm)
