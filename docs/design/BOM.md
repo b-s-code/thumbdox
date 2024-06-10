@@ -10,8 +10,8 @@ TODO : populate additional details.
 | DCS PBT Blank Ergo Keycap Set | Same keycaps as ErgoDox EZ | 1 | $91.56 AUD | $91.56 AUD | https://spkeyboards.com/collections/ergodox/products/sp-dcs-pbt-blank-ergo-keycap-sets |
 |  | TRRS jack set | | | | |
 |  | Raspberry Pi Pico microcontroller | 2 | $8.95 AUD | $17.90 AUD | https://www.altronics.com.au/p/z6421-raspberry-pi-pico-microcontroller-board/ |
-|  | Wires | | | | |
-|  | Solder | | | | |
+|  | Wires | | N/A | N/A | Already owned |
+| T1077 | Lead free solder | 1 | $4.00 AUD | $4.00 AUD | https://www.altronics.com.au/p/t1077-0.8mm-tube-15gm-lead-free-solder/ |
 | Male-male Micro USB to USB Type A cable | Connects keyboard to PC | 1 | N/A | N/A | Already owned |
 | Male-male TRRS cable | Connects left and right halves of keyboard | 1 | N/A | N/A | Already owned |
 |  | Plywood sheets | | | | |
