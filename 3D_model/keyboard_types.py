@@ -1,4 +1,5 @@
 from enum import Enum
+from solid2.core.builtins.openscad_primitives import _OpenSCADObject
 
 PartType = Enum('PartType', ['plate',  'spacer', 'base', 'keycaps'])
 
@@ -75,11 +76,13 @@ class Part:
             self,
             thickness_mm: float,
             column_groups: list[ColumnGroup],
-            part_type: PartType):
+            part_type: PartType,
+            special_cutouts: _OpenSCADObject):
         """ The trivial constructor. """
         self.thickness_mm = thickness_mm
         self.column_groups = column_groups
         self.part_type = part_type
+        self.special_cutouts = special_cutouts
 
 class MX_Key:
     """ Holds data related to an MX key. """

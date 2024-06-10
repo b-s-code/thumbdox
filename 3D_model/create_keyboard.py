@@ -126,12 +126,10 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
     # E.g. for the switch plate, this includes the the sum of world space
     # ColumnGroup hole prism matrices.
     subtrahend: _OpenSCADObject = cube(0, 0, 0)
+        
+    # Different parts may require different hardcoded cutouts.
+    subtrahend += part.special_cutouts()
     
-    # Parts need to be joined.  Here, bolts have been chosen.  This requires
-    # bolt holes in all parts which will be joined.
-    if part.part_type in {"spacer", "plate", "base"}:
-        subtrahend += _get_bolt_holes()
-
     # Nothing else should be cut out of these parts.
     if (part.part_type in ("keycaps", "base")):
         return subtrahend
@@ -227,63 +225,8 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
             column_group.column_group_params, switch_hole_matrix)
         
         subtrahend += world_space_switch_hole_matrix
-        
-        # Some bits need to be cut out from the spacer, which are not
-        # appropriate to remove from other parts.
-        if part.part_type == "spacer":
-            subtrahend += _get_spacer_cutouts()
 
     return subtrahend
-
-def _get_bolt_holes() -> _OpenSCADObject:
-    """ Returns a object composed of cylinders representing bolt holes. """
-    # TODO : if I ever get bored, this hardcoded data could be moved
-    # to model.py
-    
-    # Radius derived from *outer* diameter.
-    M3_bolt_radius_mm: float = 3.0 / 2
-
-    # Positions mentioned in comments are with respect to LHS half of keyboard.
-    # z component of translations prevents z-fighting.
-    cylinders: list[_OpenSCADObject] = [
-        # Top left.
-        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 4.5, -1),
-        # Bottom left.
-        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(99, 4.5, -1),
-        # Bottom right.
-        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(90, 138, -1),
-        # Top right.
-        cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 113.5, -1)
-    ]
-    combined_cylinders: _OpenSCADObject = cube(0,0,0)
-    for elt in cylinders:
-        combined_cylinders += elt
-    return combined_cylinders
-
-def _get_spacer_cutouts() -> _OpenSCADObject:
-    """ Returns a object composed of prisms representing pieces of
-        material to remove from the spacer.  This provides space for:
-        (1) MCU USB connector (2) USB cable connector (3) TRRS jack
-        (4) space permitting thumb key switches to be wired to everything else.
-    """
-    # TODO : if I ever get bored, this hardcoded data could be moved
-    # to model.py
-    spacer_cutouts: list[_OpenSCADObject] = [
-        # (1)(2) TRRS jack. x-value is arbitrarily long.
-        cube(30, MCU.cable_slot_width_mm,100).translate(-1, 53, -1),
-
-        # (3) TRRS jack. x-value is arbitrarily long.
-        cube(30, TRRS_Jack.width_mm, 100).translate(-1, 88, -1),
-
-        # (4) Removes island between finger keys and thumb keys.
-        # These values are all just tuned by eye, based on the specific
-        # geometry of the keyboard created thus far.
-        cube(30,20,100).translate(60, 90, -1)
-    ]
-    spacer_cutout: _OpenSCADObject = cube(0,0,0)
-    for elt in spacer_cutouts:
-        spacer_cutout += elt
-    return spacer_cutout
 
 def _get_keycap_centered(keycap_units: int,
                          plate_thickness_mm: float) -> _OpenSCADObject:
