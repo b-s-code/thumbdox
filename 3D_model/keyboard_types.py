@@ -158,7 +158,6 @@ class MCU:
     # Includes a (quite) small amount of buffer.  The actual slot height can
     # be larger than this happily, but really should not be much smaller.
     cable_slot_height_mm: float = 7.5 
-    # TODO : actually use the above values in the 3D model.
 
 class TRRS_Jack:
     """ Describes physical dimensions of an ordinary TRRS jack, obtained from a
