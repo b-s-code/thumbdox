@@ -12,13 +12,13 @@ TODO : populate additional details.
 |  | Raspberry Pi Pico microcontroller | 2 | $8.95 AUD | $17.90 AUD | https://www.altronics.com.au/p/z6421-raspberry-pi-pico-microcontroller-board/ |
 |  | Wires | | | | |
 |  | Solder | | | | |
-|  | Cable to connect kebyoard to PC | | | | |
-|  | TRRS cable | | | | |
+| Male-male Micro USB to USB Type A cable | Connects keyboard to PC | 1 | N/A | N/A | Already owned |
+| Male-male TRRS cable | Connects left and right halves of keyboard | 1 | N/A | N/A | Already owned |
 |  | Plywood sheets | | | | |
 |  | M3 screws.  Must have head diameter <= 6mm | 8 | | | |
 |  | M3 nuts.  Must have head diameter <= 6mm | 8 | | | |
-|  | Glue to fix MCU and TRRS jack in place | 8 | | | |
-|  | MX compatible key switches | 42 | | | |
+| Hot glue | Glue to fix MCU and TRRS jack in place | | | | |
+| Original Brand NEW Cherry MX Mechanical Keyboard Switches Silver Red Black Blue Brown Linear Tactile Cherry Clear SMD RGB Switch | Brown MX compatible key switches | 42 (bought 60) | ~$0.30 AUD | $17.91 AUD | https://www.aliexpress.com/item/1005006255961111.html |
 |  | | | | | |
 
 ## Tools
@@ -27,3 +27,4 @@ TODO : populate additional details.
 |---|---|---|---|---|---|
 | | Soldering iron | | | | |
 | | Knife | | | | |
+| | Hot glue gun | | | | |
