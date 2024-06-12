@@ -225,10 +225,21 @@ def export_part_3D_models():
     # Save
     for i, p in enumerate(parts):
         fname: str = part_types[i] + ".scad"
+        dir: str = os.path.dirname(os.path.realpath(__file__))
+        full_path: str = f"{dir}/{fname}"
+
+        # Writes 3D scad file.
         p.save_as_scad(
             filename=fname,
-            outdir=os.path.dirname(os.path.realpath(__file__))
+            outdir=dir
         )
+
+        # Prepend to .scad file so that its contents represent a 2D view.
+        original_contents: str = ""
+        with open(full_path, "rt") as f:
+            original_contents = f.read()
+        with open(full_path, "w") as f:
+            f.write("projection()\n" + original_contents)
 
 if __name__ == "__main__":
     export_whole_3D_model()
