@@ -168,6 +168,7 @@ def build_part(part_type: PartType) -> Part:
     return part
 
 def export_whole_3D_model():
+    """ Writes a .scad file, with entire keyboard rendered. """
     model_LHS = cube(0,0,0)
 
     # When a model consisting off all parts is created,
@@ -201,6 +202,9 @@ def export_whole_3D_model():
     )
 
 def export_part_3D_models():
+    """ Writes 1 .scad file per keyboard part.
+        Each file contains both LHS and RHS versions of the part.
+    """
     model_LHS = cube(0,0,0)
     
     part_types: list[str] =[
@@ -216,7 +220,7 @@ def export_part_3D_models():
     ]
 
     # Add RHS to each part.
-    parts = [p + p.mirror(1,0,0).translate(0,300,0) for p in parts]
+    parts = [p + p.mirror(1,0,0).translate(-10,0,0) for p in parts]
 
     # Save
     for i, p in enumerate(parts):

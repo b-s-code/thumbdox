@@ -247,7 +247,7 @@ union() {
 			}
 		}
 	}
-	translate(v = [0, 300, 0]) {
+	translate(v = [-10, 0, 0]) {
 		mirror(v = [1, 0, 0]) {
 			difference() {
 				union() {
