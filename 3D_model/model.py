@@ -167,6 +167,14 @@ def build_part(part_type: PartType) -> Part:
 
     return part
 
+def prepend_line(line: str, file_path: str):
+    """ Prepends a line of text to a text file """
+    original_contents: str = ""
+    with open(file_path, "rt") as f:
+        original_contents = f.read()
+    with open(file_path, "w") as f:
+        f.write(f"{line}\n" + original_contents)
+
 def export_whole_3D_model():
     """ Writes a .scad file, with entire keyboard rendered. """
     model_LHS = cube(0,0,0)
@@ -235,11 +243,7 @@ def export_part_3D_models():
         )
 
         # Prepend to .scad file so that its contents represent a 2D view.
-        original_contents: str = ""
-        with open(full_path, "rt") as f:
-            original_contents = f.read()
-        with open(full_path, "w") as f:
-            f.write("projection()\n" + original_contents)
+        prepend_line("projection()", full_path)
 
 if __name__ == "__main__":
     export_whole_3D_model()
