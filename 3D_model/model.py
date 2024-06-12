@@ -1,3 +1,4 @@
+import os
 from solid2.core.builtins.openscad_primitives import _OpenSCADObject
 from solid2 import cube
 from create_keyboard import *
@@ -166,17 +167,65 @@ def build_part(part_type: PartType) -> Part:
 
     return part
 
-if __name__ == "__main__":
+def export_whole_3D_model():
     model_LHS = cube(0,0,0)
+
+    # When a model consisting off all parts is created,
+    # appropriate vertical offsets need to be set.
+    part_types_and_offsets_mm: dict[str, float] = {
+        "base" : 0,
+        "spacer" : 5,
+        "plate" : 5 + 10,
+        "keycaps" : 5 + 10 + 5
+    }
+
+    # Create and vertically translate all parts.
     parts: list[_OpenSCADObject] = [
-        render(build_part('base')),
-        render(build_part('spacer')).translate(0,0,5),
-        render(build_part('plate')).translate(0,0,5+10),
-        render(build_part('keycaps')).translate(0,0,5+10+5)
+        render(build_part(key))
+        .translate(0,0,value)
+        for key, value in part_types_and_offsets_mm.items()
     ]
+
+    # Mirror, rotate, then translate LHS to produce RHS.
     for i in range(len(parts)):
         model_LHS += parts[i]
-    model_RHS: _OpenSCADObject = model_LHS.mirror(1,0,0).rotate(0,0,200).translate(-54,300,0)
-
+    model_RHS: _OpenSCADObject = (
+        model_LHS.mirror(1,0,0).rotate(0,0,200).translate(-54,300,0))
+    
+    # Save
     model: _OpenSCADObject = model_LHS + model_RHS
-    model.save_as_scad()
+    fname: str = "full_model.scad"
+    model.save_as_scad(
+        filename=fname,
+        outdir=os.path.dirname(os.path.realpath(__file__))
+    )
+
+def export_part_3D_models():
+    model_LHS = cube(0,0,0)
+    
+    part_types: list[str] =[
+        "base",
+        "spacer",
+        "plate"
+    ]
+
+    # Create all parts, LHS only.
+    parts: list[_OpenSCADObject] = [
+        render(build_part(key))
+        for key in part_types
+    ]
+
+    # Add RHS to each part.
+    parts = [p + p.mirror(1,0,0).translate(0,300,0) for p in parts]
+
+    # Save
+    for i, p in enumerate(parts):
+        fname: str = part_types[i] + ".scad"
+        p.save_as_scad(
+            filename=fname,
+            outdir=os.path.dirname(os.path.realpath(__file__))
+        )
+
+if __name__ == "__main__":
+    export_whole_3D_model()
+    export_part_3D_models()
