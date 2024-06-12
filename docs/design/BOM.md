@@ -14,7 +14,7 @@ TODO : populate additional details.
 | T1077 | Lead free solder | 1 | $4.00 AUD | $4.00 AUD | https://www.altronics.com.au/p/t1077-0.8mm-tube-15gm-lead-free-solder/ |
 | Male-male Micro USB to USB Type A cable | Connects keyboard to PC | 1 | N/A | N/A | Already owned |
 | Male-male TRRS cable | Connects left and right halves of keyboard | 1 | N/A | N/A | Already owned |
-|  | Plywood sheets | | | | |
+| Laser cut plywood | 5mm ply for base layer, bottom spacer layer, top spacer layer, and switch plate layer | | | | |
 |  | M3 screws.  Must have head diameter <= 6mm | 8 | | | |
 |  | M3 nuts.  Must have head diameter <= 6mm | 8 | | | |
 | Hot glue | Glue to fix MCU and TRRS jack in place | | | | |
