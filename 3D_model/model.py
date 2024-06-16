@@ -209,14 +209,17 @@ def export_whole_3D_model():
         outdir=os.path.dirname(os.path.realpath(__file__))
     )
 
-def export_part_3D_models():
-    """ Writes 1 .scad file per keyboard part.
-        Each file contains both LHS and RHS versions of the part.
+def export_laser_projections():
+    """ Exports the 2D projection of all parts that need to be produced
+        by laser cutting, in one single .scad file.  The .scad file can
+        then be rendered and exported to a file format the laser cutter
+        can accept.
     """
     model_LHS = cube(0,0,0)
     
     part_types: list[str] =[
         "base",
+        "spacer",
         "spacer",
         "plate"
     ]
@@ -227,24 +230,26 @@ def export_part_3D_models():
         for key in part_types
     ]
 
-    # Add RHS to each part.
+    # Add RHS to each part.  Translate each LHS/RHS pair, so no pair overlaps another pair.
     parts = [p + p.mirror(1,0,0).translate(-10,0,0) for p in parts]
+    parts = [p.translate(0,i * 150,0) for i, p in enumerate(parts)]
 
-    # Save
-    for i, p in enumerate(parts):
-        fname: str = part_types[i] + ".scad"
-        dir: str = os.path.dirname(os.path.realpath(__file__))
-        full_path: str = f"{dir}/{fname}"
+    concatenated_parts: _OpenSCADObject = cube(0,0,0)
+    for p in parts:
+        concatenated_parts += p
 
-        # Writes 3D scad file.
-        p.save_as_scad(
-            filename=fname,
-            outdir=dir
-        )
+    # Save to file.
+    fname: str = "concat_parts.scad"
+    dir: str = os.path.dirname(os.path.realpath(__file__))
+    full_path: str = f"{dir}/{fname}"
+    concatenated_parts.save_as_scad(
+        filename=fname,
+        outdir=dir
+    )
 
-        # Prepend to .scad file so that its contents represent a 2D view.
-        prepend_line("projection()", full_path)
+    # Prepend to .scad file so that its contents represent a 2D view.
+    prepend_line("projection()", full_path)
 
 if __name__ == "__main__":
     export_whole_3D_model()
-    export_part_3D_models()
+    export_laser_projections()
