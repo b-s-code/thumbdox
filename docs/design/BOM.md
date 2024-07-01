@@ -15,7 +15,7 @@ TODO : populate additional details.
 | T1077 | Lead free solder | 1 | $4.00 AUD | $4.00 AUD | https://www.altronics.com.au/p/t1077-0.8mm-tube-15gm-lead-free-solder/ |
 | Male-male Micro USB to USB Type A cable | Connects keyboard to PC | 1 | N/A | N/A | Already owned |
 | Male-male TRRS cable | Connects left and right halves of keyboard | 1 | N/A | N/A | Already owned |
-| Laser cut plywood | 5mm ply for base layer, bottom spacer layer, top spacer layer, and switch plate layer | | | | |
+| Plywood for laser cutting | 3mm plywood 1200mm x 810mm | 1 | $18.00 AUD | $18.00 AUD | Bunnings |
 | M3 x 25mm bolts and nuts | Used to join keyboard layer - requires head diameter <=6mm, thread length >20mm. | 8 | N/A | $3.90 AUD | https://www.bunnings.com.au/pinnacle-m3-x-25mm-stainless-steel-hex-head-bolts-and-nuts-12-pack_p0247296 |
 | Hot glue | Glue to fix MCU and TRRS jack in place | | | | |
 | Original Brand NEW Cherry MX Mechanical Keyboard Switches Silver Red Black Blue Brown Linear Tactile Cherry Clear SMD RGB Switch | Brown MX compatible key switches | 42 (bought 60) | ~$0.30 AUD | $17.91 AUD | https://www.aliexpress.com/item/1005006255961111.html |
