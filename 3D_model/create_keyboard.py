@@ -88,7 +88,7 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
     """
     # We get less branching logic here by just farming out keycap minuend
     # construction to a separate function.
-    if (part.part_type == "keycaps"):
+    if part.part_type == "keycaps":
         return _render_keycaps(part)
 
     minuend: _OpenSCADObject = cube(0, 0, 0)
@@ -97,7 +97,7 @@ def _render_minuend(part: Part) -> _OpenSCADObject:
     # In an exploded view, it's nice if adjacent parts can be differentiated
     # visually.
     part_color = 'red'
-    if (part.part_type == 'spacer'):
+    if part.part_type == 'spacer':
         part_color = 'blue'
 
     for i in num_column_groups:
@@ -130,7 +130,7 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
     subtrahend = part.special_cutouts
     
     # Nothing else should be cut out of these parts.
-    if (part.part_type in ("keycaps", "base")):
+    if part.part_type in ("keycaps", "base"):
         return subtrahend
 
     # Define a prism representing one key switch hole.  The prism is
@@ -162,9 +162,9 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
             -z_buffer_mm / 2))
     
     hole_prism_uncentered: _OpenSCADObject = cube(0, 0, 0)
-    if (part.part_type == "plate"):
+    if part.part_type == "plate":
          hole_prism_uncentered = hole_prism_uncentered_plate
-    elif (part.part_type == "spacer"):
+    elif part.part_type == "spacer":
          hole_prism_uncentered = hole_prism_uncentered_spacer
     else:
         raise ValueError
