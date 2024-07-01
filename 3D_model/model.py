@@ -209,19 +209,19 @@ def export_whole_3D_model():
         outdir=os.path.dirname(os.path.realpath(__file__))
     )
 
-# TODO : clean up 3mm/6mm projection functions.
-def export_laser_projections_6mm():
+def export_laser_projections_3mm():
     """ Exports the 2D projection of all parts that need to be produced
         by laser cutting, in one single .scad file.  The .scad file can
         then be rendered and exported to a file format the laser cutter
-        can accept.
+        can accept.  The parts should be cut from 3mm thick material.
     """
-    model_LHS = cube(0,0,0)
-    
     part_types: list[str] =[
-        "base",
+        "plate",
         "spacer",
-        "spacer"
+        "spacer",
+        "spacer",
+        "spacer",
+        "base"
     ]
 
     # Create all parts, LHS only.
@@ -230,39 +230,8 @@ def export_laser_projections_6mm():
         for key in part_types
     ]
 
-    # Add RHS to each part.  Translate each LHS/RHS pair, so no pair overlaps another pair.
-    parts = [p + p.mirror(1,0,0).translate(-10,0,0) for p in parts]
-    parts = [p.translate(0,i * 150,0) for i, p in enumerate(parts)]
-
-    concatenated_parts: _OpenSCADObject = cube(0,0,0)
-    for p in parts:
-        concatenated_parts += p
-
-    # Save to file.
-    fname: str = "concat_parts_6mm.scad"
-    dir: str = os.path.dirname(os.path.realpath(__file__))
-    full_path: str = f"{dir}/{fname}"
-    concatenated_parts.save_as_scad(
-        filename=fname,
-        outdir=dir
-    )
-
-    # Prepend to .scad file so that its contents represent a 2D view.
-    prepend_line("projection()", full_path)
-
-def export_laser_projections_3mm():
-    """ Exports the 2D projection of all parts that need to be produced
-        by laser cutting, in one single .scad file.  The .scad file can
-        then be rendered and exported to a file format the laser cutter
-        can accept.
-    """
-    model_LHS = cube(0,0,0)
-    # Create all parts, LHS only.
-    parts: list[_OpenSCADObject] = [
-        render(build_part("plate"))
-    ]
-
-    # Add RHS to each part.  Translate each LHS/RHS pair, so no pair overlaps another pair.
+    # Add RHS to each part.  Translate each LHS/RHS pair, so no pair overlaps
+    # another pair.
     parts = [p + p.mirror(1,0,0).translate(-10,0,0) for p in parts]
     parts = [p.translate(0,i * 150,0) for i, p in enumerate(parts)]
 
@@ -274,15 +243,11 @@ def export_laser_projections_3mm():
     fname: str = "concat_parts_3mm.scad"
     dir: str = os.path.dirname(os.path.realpath(__file__))
     full_path: str = f"{dir}/{fname}"
-    concatenated_parts.save_as_scad(
-        filename=fname,
-        outdir=dir
-    )
+    concatenated_parts.save_as_scad(filename=fname, outdir=dir)
 
     # Prepend to .scad file so that its contents represent a 2D view.
     prepend_line("projection()", full_path)
 
 if __name__ == "__main__":
     export_whole_3D_model()
-    export_laser_projections_6mm()
     export_laser_projections_3mm()
