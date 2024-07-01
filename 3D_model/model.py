@@ -3,6 +3,7 @@ from solid2.core.builtins.openscad_primitives import _OpenSCADObject
 from solid2 import cube
 from create_keyboard import *
 from keyboard_types import *
+from util_fns import *
 
 # START HARDCODED CONFIGURATION
 def get_bolt_holes() -> _OpenSCADObject:
@@ -22,10 +23,7 @@ def get_bolt_holes() -> _OpenSCADObject:
         # Top right.
         cylinder(r=M3_bolt_radius_mm, h=15, _fn=30).translate(4.5, 113.5, -1)
     ]
-    combined_cylinders: _OpenSCADObject = cube(0,0,0)
-    for elt in cylinders:
-        combined_cylinders += elt
-    return combined_cylinders
+    return combine(cylinders)
 
 def get_spacer_cutouts() -> _OpenSCADObject:
     """ Returns a object composed of prisms representing pieces of
@@ -45,10 +43,7 @@ def get_spacer_cutouts() -> _OpenSCADObject:
         # geometry of the keyboard created thus far.
         cube(30,20,100).translate(60, 90, -1)
     ]
-    spacer_cutout: _OpenSCADObject = cube(0,0,0)
-    for elt in spacer_cutouts:
-        spacer_cutout += elt
-    return spacer_cutout
+    return combine(spacer_cutouts)
 
 def build_part(part_type: PartType) -> Part:
     """ Returns a Part that can be rendered.  The Part is built up in a
@@ -177,8 +172,6 @@ def prepend_line(line: str, file_path: str):
 
 def export_whole_3D_model():
     """ Writes a .scad file, with entire keyboard rendered. """
-    model_LHS = cube(0,0,0)
-
     # When a model consisting off all parts is created,
     # appropriate vertical offsets need to be set.
     part_types_and_offsets_mm: dict[str, float] = {
@@ -196,8 +189,7 @@ def export_whole_3D_model():
     ]
 
     # Mirror, rotate, then translate LHS to produce RHS.
-    for i in range(len(parts)):
-        model_LHS += parts[i]
+    model_LHS = combine(parts)
     model_RHS: _OpenSCADObject = (
         model_LHS.mirror(1,0,0).rotate(0,0,200).translate(-54,300,0))
     
@@ -235,9 +227,7 @@ def export_laser_projections_3mm():
     parts = [p + p.mirror(1,0,0).translate(-10,0,0) for p in parts]
     parts = [p.translate(0,i * 150,0) for i, p in enumerate(parts)]
 
-    concatenated_parts: _OpenSCADObject = cube(0,0,0)
-    for p in parts:
-        concatenated_parts += p
+    concatenated_parts: _OpenSCADObject = combine(parts)
 
     # Save to file.
     fname: str = "concat_parts_3mm.scad"

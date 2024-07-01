@@ -1,6 +1,7 @@
 from solid2.core.builtins.openscad_primitives import _OpenSCADObject
 from solid2 import cube, cylinder
 from keyboard_types import *
+from util_fns import *
 
 def _world_transform(column_group_params: ColumnGroupParams,
                     obj: _OpenSCADObject) -> _OpenSCADObject:
@@ -125,10 +126,8 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
     # Accumulator object for all sub-subtrahends.
     # E.g. for the switch plate, this includes the the sum of world space
     # ColumnGroup hole prism matrices.
-    subtrahend: _OpenSCADObject = cube(0, 0, 0)
-        
-    # Different parts may require different hardcoded cutouts.
-    subtrahend += part.special_cutouts()
+    # Note that different parts may require different hardcoded cutouts.
+    subtrahend = part.special_cutouts
     
     # Nothing else should be cut out of these parts.
     if (part.part_type in ("keycaps", "base")):
@@ -162,8 +161,6 @@ def _render_subtrahend(part: Part) -> _OpenSCADObject:
             -(spacer_part_key_space_allocation_mm - hole_side_length) / 2,
             -z_buffer_mm / 2))
     
-    # Have some polymorphism over parts here instead of duplicated code
-    # across multiple functions.
     hole_prism_uncentered: _OpenSCADObject = cube(0, 0, 0)
     if (part.part_type == "plate"):
          hole_prism_uncentered = hole_prism_uncentered_plate

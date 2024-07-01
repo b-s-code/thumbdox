@@ -23,7 +23,6 @@ union() {
 				}
 				union() {
 					cube(size = [0, 0, 0]);
-					cube(size = [0, 0, 0]);
 					translate(v = [4.5, 4.5, -1]) {
 						cylinder($fn = 30, h = 15, r = 1.5);
 					}
@@ -262,7 +261,6 @@ union() {
 							}
 						}
 						union() {
-							cube(size = [0, 0, 0]);
 							cube(size = [0, 0, 0]);
 							translate(v = [4.5, 4.5, -1]) {
 								cylinder($fn = 30, h = 15, r = 1.5);
@@ -506,7 +504,6 @@ union() {
 					}
 				}
 				union() {
-					cube(size = [0, 0, 0]);
 					cube(size = [0, 0, 0]);
 					translate(v = [-1, 53, -1]) {
 						cube(size = [30, 13.0, 100]);
@@ -756,7 +753,6 @@ union() {
 							}
 						}
 						union() {
-							cube(size = [0, 0, 0]);
 							cube(size = [0, 0, 0]);
 							translate(v = [-1, 53, -1]) {
 								cube(size = [30, 13.0, 100]);
@@ -1011,7 +1007,6 @@ union() {
 				}
 				union() {
 					cube(size = [0, 0, 0]);
-					cube(size = [0, 0, 0]);
 					translate(v = [-1, 53, -1]) {
 						cube(size = [30, 13.0, 100]);
 					}
@@ -1260,7 +1255,6 @@ union() {
 							}
 						}
 						union() {
-							cube(size = [0, 0, 0]);
 							cube(size = [0, 0, 0]);
 							translate(v = [-1, 53, -1]) {
 								cube(size = [30, 13.0, 100]);
@@ -1515,7 +1509,6 @@ union() {
 				}
 				union() {
 					cube(size = [0, 0, 0]);
-					cube(size = [0, 0, 0]);
 					translate(v = [-1, 53, -1]) {
 						cube(size = [30, 13.0, 100]);
 					}
@@ -1764,7 +1757,6 @@ union() {
 							}
 						}
 						union() {
-							cube(size = [0, 0, 0]);
 							cube(size = [0, 0, 0]);
 							translate(v = [-1, 53, -1]) {
 								cube(size = [30, 13.0, 100]);
@@ -2019,7 +2011,6 @@ union() {
 				}
 				union() {
 					cube(size = [0, 0, 0]);
-					cube(size = [0, 0, 0]);
 					translate(v = [-1, 53, -1]) {
 						cube(size = [30, 13.0, 100]);
 					}
@@ -2268,7 +2259,6 @@ union() {
 							}
 						}
 						union() {
-							cube(size = [0, 0, 0]);
 							cube(size = [0, 0, 0]);
 							translate(v = [-1, 53, -1]) {
 								cube(size = [30, 13.0, 100]);
@@ -2523,7 +2513,6 @@ union() {
 				}
 				union() {
 					cube(size = [0, 0, 0]);
-					cube(size = [0, 0, 0]);
 					translate(v = [4.5, 4.5, -1]) {
 						cylinder($fn = 30, h = 15, r = 1.5);
 					}
@@ -2559,7 +2548,6 @@ union() {
 							}
 						}
 						union() {
-							cube(size = [0, 0, 0]);
 							cube(size = [0, 0, 0]);
 							translate(v = [4.5, 4.5, -1]) {
 								cylinder($fn = 30, h = 15, r = 1.5);
