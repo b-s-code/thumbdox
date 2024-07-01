@@ -4,6 +4,11 @@ from solid2.core.builtins.openscad_primitives import _OpenSCADObject
 PartType = Enum('PartType', ['plate',  'spacer', 'base', 'keycaps'])
 
 class ColumnParams:
+    """ Represents the parameters of a (horizontally-aligned) column of keys,
+        all of which have the same length, in terms of keycap units.
+        I.e. a column containing both a 1U key and a 2U key cannot be
+        represented using a single ColumnParams object.
+    """
     def __init__(
             self,
             x_offset_mm: float,
@@ -12,28 +17,10 @@ class ColumnParams:
         """ The trivial constructor. """
         self.x_offset_mm = x_offset_mm
         self.numkeys = numkeys
-        # All keys in a column are constrained to having the same length.
-        #
-        #                                        +---+ +---+
-        #   E.g. you can have a column           | 1u| |   |
-        #        like either of these.           +---+ | 2u|
-        #                                        | 1u| |   |
-        #                                        +---+ +---+
-        #                                        | 1u| |   |
-        #                                        +---+ | 2u|
-        #                                        | 1u| |   |
-        #                                        +---+ +---+
-        #                          
-        #                                        +---+
-        #                                        |   |
-        #         But not like this.             + 2u|
-        #                                        |   |
-        #                                        +---+
-        #                                        | 1u|
-        #                                        +---+
         self.key_length_U = key_length_U
 
 class ColumnGroupParams:
+    """ Represents parameters of a collection of columns. """
     def __init__(
             self,
             top_padding_mm: float,
@@ -53,6 +40,7 @@ class ColumnGroupParams:
         self.rotation_CW_degrees = rotation_CW_degrees
 
 class ColumnGroup:
+    """ Represents a collection of columns of keys. """
     def __init__(
             self,
             column_group_params: ColumnGroupParams,
@@ -72,6 +60,9 @@ class ColumnGroup:
         self.columns_params = columns_params
 
 class Part:
+    """ Represents a 3D path component of material, whose shape depends on what
+        keys the keyboard has, and how they are positioned.
+    """
     def __init__(
             self,
             thickness_mm: float,
