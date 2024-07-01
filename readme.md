@@ -16,4 +16,4 @@ My aims in producing ThumbDox:
 
 ## Development
 
-See [docs/design/dev_env_setup.md](docs/design/dev_env_setup.md) for details on modifying/compiling the Python source for the 3D model into OpenSCAD code.
+See [docs/design/dev_env_setup.md](docs/design/dev_env_setup.md) for details on going from Python source to DXF files suitable for laser cutting.
