@@ -240,4 +240,5 @@ def export_laser_projections_3mm():
 
 if __name__ == "__main__":
     export_whole_3D_model()
+
     export_laser_projections_3mm()
