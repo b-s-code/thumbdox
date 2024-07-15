@@ -16,6 +16,6 @@ My aims in producing ThumbDox:
 
 ## Development
 
-See [docs/design/dev_env_setup.md](docs/design/dev_env_setup.md) for details on going from Python source to DXF files suitable for laser cutting.
+See [docs/design/dev_env_setup.md](docs/design/model_dev_env_setup.md) for details on going from Python source to DXF files suitable for laser cutting.
 
-See [docs/design/qmk_dev_env_setup.md](docs/design/qmk_dev_env_setup.md) for details on working with the QMK firmware that powers ThumbDox.
+See [docs/design/qmk_dev_env_setup.md](docs/firmware/qmk_dev_env_setup.md) for details on working with the QMK firmware that powers ThumbDox.
