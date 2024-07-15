@@ -1,8 +1,10 @@
 # Setting up the development environment for editing ThumbDox's firmware
 
-[QMK firmware](https://qmk.fm/) is used by ThumbDox.
+ThumbDox runs [QMK firmware](https://qmk.fm/).
 
 ## Setup steps
+
+Read this whole page before starting.
 
 ### Dependencies
 
@@ -15,6 +17,7 @@ Follow the instructions in QMK's documentation on [Setting Up Your QMK Environme
 $ source ./venv/bin/activate
 
 # Install all dependencies of the ThumbDox project which can be installed with pip.
+# This includes QMK.
 $ pip install -r requirements.txt
 ```
 
@@ -22,12 +25,12 @@ $ pip install -r requirements.txt
 
 ### Editing the ThumbDox firmware
 
-TODO
+TODO : Want to set this up as what QMK docs call "External QMK Userspace".
 
 ### Compiling
 
-TODO
+TODO : I expect this will be `qmk compile -kb handwired/thumbdox -km default`.
 
 ### Flashing
 
-TODO
+TODO : I expect this will be a matter of copying .uf2 files to respective MCUs.
