@@ -1,5 +1,5 @@
-# Not interesting in checking in the Python virtual environment used
-# for designing the 3D model.
+# Use a virtual environment for modelling and firmware build
+# dependencies, but don't check it in.
 venv/
 
 __pycache__/

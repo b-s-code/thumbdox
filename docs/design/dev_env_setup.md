@@ -17,13 +17,18 @@ $ sudo apt-get install openscad
 ### Set up Python environment for generating OpenSCAD code
 
 ```
-# Create virtual environment to install 3D modelling Python dependencies.
+# cd to root of ThumbDox repo.
+
+# Create a virtual environment to install dependencies.
 $ python3 -m venv ./venv
 
-# Actually install the dependencies.
-# Note "python3 -m pip install -r requirements.txt" and
-# Note "pip install -r requirements.txt" did not work on my machine.
-$ ./venv/bin/python3 -m pip install -r requirements.txt
+# Activate the virtual environment.
+$ source ./venv/bin/activate
+
+# Actually install the dependencies.  This installs both packages needed
+# for 3D modelling and packages needed for building the firmware to the
+# virtual environment.
+$ pip install -r requirements.txt
 ```
 
 ## Actual development steps
@@ -33,6 +38,8 @@ $ ./venv/bin/python3 -m pip install -r requirements.txt
 The source code for the 3D model is `3D_model/model.py`.  Editing that Python file is necessary to change the model (it is not intended that this project's generated OpenSCAD code be manually edited).
 
 ### Compiling the 3D model source to OpenSCAD code
+
+(With the virtual environment for the project activated.)
 
 `$ ./venv/bin/python3 3D_model/model.py`
 
