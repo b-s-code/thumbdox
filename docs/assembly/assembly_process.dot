@@ -1,0 +1,72 @@
+digraph
+{
+    node [shape="box"]
+    label="Electronic/mechanical assembly process."
+    
+    subgraph cluster_WAD
+    {
+        label="Draw WAD."
+        matrix [label="Draw matrix (switches, diodes, row/col wires, MCU pins)."]
+        jacks [label="Draw TRRS connection to MCU pins\n(resistors needed or no?)."]
+        WAD_done [label="WAD done."]
+        matrix->WAD_done
+        jacks->WAD_done
+    }
+    
+    subgraph cluster_gather_materials
+    {
+        label="Gather materials."
+        glue [label="Get super glue.\nhttps://www.bunnings.com.au/utility-3g-super-glue-6-pack_p1210621"]
+        spray [label="Get spray coat for switch plate."]
+    }
+    
+    glue->layers
+    glue->spacer_islands
+    glue->connect_islands_plate
+    glue->insert_switches
+    spray->coat
+    WAD_done->wireRows
+    
+    subgraph cluster_init_gluing
+    {
+        label="Initial gluing and coating."
+        coat [label="Spray coat switch plate."]
+        layers [label="Glue all layers except base together."]
+        spacer_islands [label="Glue spacer islands together."]
+        connect_islands_plate [label="Glue spacer islands to plate."]
+        insert_switches [label="Glue switches to plate.\nCAREFUL to avoid getting super glue\nANYWHERE NEAR where soldering will be done."]
+        coat->insert_switches
+        layers->connect_islands_plate
+        spacer_islands->connect_islands_plate
+    }
+    
+    
+    subgraph cluster_wiring
+    {
+        label="Do wiring, insulation."
+        diodes [label="Wire diodes to switches."]
+        wireRows [label="Wire & wrap rows.\nDON'T connect to MCU yet."]
+        wireColumns [label="Wire & wrap columns.\nDON'T connect to MCU yet."]
+        wireMCU [label="Wire & wrap MCU with reset button facing base plate."]
+        wireTRRS [label="Wire & wrap TRRS jacks to MCU."]
+        diodes->wireRows->wireColumns->wireMCU
+    }
+    wireMCU->glueJacks->wireTRRS
+    connect_islands_plate->glueMCU
+    connect_islands_plate->glueJacks
+    insert_switches->diodes
+    wireMCU->wireTRRS
+    
+    subgraph cluster_init_gluing2
+    {
+        label="Later gluing."
+        glueMCU [label="Glue MCU to case."]
+        glueJacks [label="Glue TRRS jack to case."]
+    }
+    
+    done [label="Flash F/W and test."]
+    wireTRRS->done
+    boltUp [label="Bolt base plate shut."]
+    done->boltUp
+}
+
