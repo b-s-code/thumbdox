@@ -7,7 +7,7 @@ digraph
     {
         label="Draw WAD."
         matrix [label="Draw matrix (switches, diodes, row/col wires, MCU pins)."]
-        jacks [label="Draw TRRS connection to MCU pins\n(resistors needed or no?)."]
+        jacks [label="Draw TRRS connection to MCU pins."]
         WAD_done [label="WAD done."]
         matrix->WAD_done
         jacks->WAD_done
