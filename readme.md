@@ -4,6 +4,8 @@ The ThumbDox is a (WIP) split keyboard based on the [ErgoDox](https://www.ergodo
 
 ![img](/docs/design/images/LHS_and_exploded_view2.png)
 
+![img](/docs/assembly/img//all_switches_glued.jpg)
+
 My aims in producing ThumbDox:
 
 1.  Eliminate most of the keys I don't use.
