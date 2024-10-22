@@ -62,3 +62,12 @@ It looks like someone else built a handwired dactyl using Picos and QMK, wiring 
 https://www.reddit.com/r/ErgoMechKeyboards/comments/15hx3r7/handwired_dactylmanuform_with_raspberry_pi_picos/
 
 It's possible this is a cat-skinning problem.
+
+### Pin usage
+
+| Pin number | Pin name | Use |
+|----|-----|----|
+| 38 | GND | TRRS - ground |
+| 36 | 3V3(OUT) | TRRS - power transmission |
+| 1  | GP0 | Serial TX |
+| 2  | GP1 | Serial RX |
