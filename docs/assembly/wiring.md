@@ -71,3 +71,15 @@ It's possible this is a cat-skinning problem.
 | 36 | 3V3(OUT) | TRRS - power transmission |
 | 1  | GP0 | Serial TX |
 | 2  | GP1 | Serial RX |
+| X  | GPX | Top row |
+| Y  | GPY | Home row |
+| Z  | GPZ | Below home row |
+| W  | GPW | Bottom row |
+| A  | GPA | Pinky column |
+| B  | GPB | Ring column |
+| C  | GPC | Middle column |
+| D  | GPD | Index home column |
+| E  | GPE | Index centre-most column |
+| F  | GPF | Thumb centre-most column |
+
+TODO : assign pins for above purpose, sanity check the idea.
