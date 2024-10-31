@@ -71,10 +71,11 @@ It's possible this is a cat-skinning problem.
 | 36 | 3V3(OUT) | TRRS - power transmission |
 | 1  | GP0 | Serial TX |
 | 2  | GP1 | Serial RX |
-| X  | GPX | Top row |
-| Y  | GPY | Home row |
-| Z  | GPZ | Below home row |
-| W  | GPW | Bottom row |
+| 16 | GP12 | Top row |
+| 17 | GP13 | Home row |
+| 19 | GP14 | Below home row |
+| 20 | GP15 | Bottom row |
+| 15 | GP11 | Thumb row |
 | A  | GPA | Pinky column |
 | B  | GPB | Ring column |
 | C  | GPC | Middle column |
