@@ -47,6 +47,13 @@ Somewhat arbitrarily, 3v3 to 3v3 has been selected as the wiring scheme for supp
 
 ## MCU pin assignment scheme
 
+Note:
+
+- "Centre-most" means centre of the two halves.  Not centre of one half of the keyboard.
+- Thumb keys exist on their own row.
+- Centre-most thumb key is wired to centre-most index column.
+- The other thumb key is wired to home index column.
+
 | Pin number | Pin name | Use |
 |----|-----|----|
 | 38 | GND | TRRS - ground |
@@ -58,11 +65,8 @@ Somewhat arbitrarily, 3v3 to 3v3 has been selected as the wiring scheme for supp
 | 19 | GP14 | Below home row |
 | 20 | GP15 | Bottom row |
 | 15 | GP11 | Thumb row |
-| A  | GPA | Pinky column |
-| B  | GPB | Ring column |
-| C  | GPC | Middle column |
-| D  | GPD | Index home column |
-| E  | GPE | Index centre-most column |
-| F  | GPF | Thumb centre-most column |
-
-TODO : assign pins for above purpose, sanity check the idea.
+| 26 | GP20 | Pinky column |
+| 25 | GP19 | Ring column |
+| 24 | GP18 | Middle column |
+| 22 | GP17 | Index home column |
+| 21 | GP16 | Index centre-most column |
