@@ -1,8 +1,22 @@
 # Wiring
 
-This doc exists in place of a full wiring diagram.
+This document details wiring:
 
-## TRRS
+- within each keyboard half
+ - i.e. how rows/columns are connected to each MCU
+- between the two keyboard halves
+ - i.e. how each MCU is is wired to its respective TRRS jack
+
+## Software support for split keyboards
+
+Won't flesh this out fully here since it's a wiring doc.  But there is code required to set this up.  See:
+
+- https://docs.qmk.fm/features/split_keyboard
+- https://docs.qmk.fm/drivers/serial
+
+## TRRS connections
+
+### TRRS communication mode
 
 Each MCU needs a TRRS jack wired to it.
 
@@ -12,58 +26,26 @@ Thus, serial communication must be used instead.
 
 Pull up resistors are not required since using serial rather than I2C.
 
-### Software support
+Note: ThumbDox uses *full duplex* serial communication (2 wires) which is purportedly faster.  It's unclear whether this is really necessary in practice.
 
-Won't flesh this out fully here since it's a wiring doc.  But there is code required to set this up.  See:
+### Which MCU pins can be used for connecting to TRRS jacks?
 
-- https://docs.qmk.fm/features/split_keyboard
-- https://docs.qmk.fm/drivers/serial
+Let's consider, from the primary MCU's perspective, the purpose of the 4 wires between the two keyboard halves.
 
-### Full vs. half duplex serial comms.
+1. wire for transmitting data to the secondary MCU 
+2. wire for receiving data from the secondary MCU
+3. wire for ground
+4. wire for supplying power to the secondary MCU
 
-Prefer full duplex for faster communication speeds over the TRRS link, just in case.
+1, 2, and 3 can be wired to GPIO/ground pins.  But which pin to use for 4 is less clear.
 
-### Pins
+Some split keyboards using Pico MCUs have VSYS wired to VSYS.  Others have 3v3 wired to 3v3.
 
-Which pins on the MCU should be wired to the TRRS jacks?
+People online argue about what's "right".  Neither setup is unanimously considered "preferred" or even "unambiguously okay".
 
-  - Whatever choice is made, it seems important that the selection is mirrored on the other side of the keyboard.
-  - Someone on Reddit describes VSYS-VSYS GND-GND GPX-GPX GPY-GPY
-    - It sounds like they may actually not have been using a Pico, but some other RP2040 board
-  - Someone who built a split with Picos, but not QMK (KMK instead) provided a different recommendation (and also mentioned USART comms.).  They recommended 3V3-3V3 GND-GND GPX-GPX GPY-GPY
+Somewhat arbitrarily, 3v3 to 3v3 has been selected as the wiring scheme for supplying ThumbDox's secondary MCU with power.
 
-A more definite schema needs to be organised.
-
-Let's consider the purpose of the 4 wires between the two keyboard halves.
-
-- 1 pin for transmitting data to other side
-- 1 pin for receiving data from other side
-- 1 pin for ground
-- 1 pin for power
-
-Originally, I did not consider fully that "for power" did not mean "for powering serial communication over TRRS".  That wire has got to be the only way that the controllee half of the keyboard gets power.  The controller half gets power in over a micro USB connection.  But the controllee half gets power from the controller half over the TRRS cable.
-
-We can be reasonably confident that 3 of the controller pin to controllee pin connections can be wired like 
-
-```
-GND-GND GPX-GPX GPY-GPY
-```
-
-but the question of the power pins remains.
-
-It looks like the Piantor, which uses QMK on Picos, has VSYS wired to VSYS.
-
-https://github.com/beekeeb/piantor/blob/main/docs/left-front.png
-
-https://github.com/beekeeb/piantor/blob/main/docs/keyboard_right.png
-
-It looks like someone else built a handwired dactyl using Picos and QMK, wiring 3V3 to 3V3.
-
-https://www.reddit.com/r/ErgoMechKeyboards/comments/15hx3r7/handwired_dactylmanuform_with_raspberry_pi_picos/
-
-It's possible this is a cat-skinning problem.
-
-### Pin usage
+## MCU pin assignment scheme
 
 | Pin number | Pin name | Use |
 |----|-----|----|
