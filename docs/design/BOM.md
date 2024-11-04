@@ -24,4 +24,6 @@
 | Knife | - |
 | Hot glue gun | - |
 | Hot glue | To fix MCU and TRRS jack in place. |
-| Wires  | - |
+| Wire (insulated)  | - |
+| Wire (uninsulated)  | - |
+| Heat-shrink tubing  | - |
