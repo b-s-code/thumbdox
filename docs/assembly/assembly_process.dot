@@ -25,7 +25,7 @@ digraph
     glue->connect_islands_plate
     glue->insert_switches
     spray->coat
-    WAD_done->wireRows
+    WAD_done->wireColumns
     
     subgraph cluster_init_gluing
     {
@@ -45,16 +45,17 @@ digraph
     {
         label="Do wiring, insulation."
         diodes [label="Wire diodes to switches."]
-        wireRows [label="Wire & wrap rows.\nDON'T connect to MCU yet."]
-        wireColumns [label="Wire & wrap columns.\nDON'T connect to MCU yet."]
-        wireMCU [label="Wire & wrap MCU with reset button facing base plate."]
-        wireTRRS [label="Wire & wrap TRRS jacks to MCU."]
-        diodes->wireRows->wireColumns->wireMCU
+        wrapRows [label="Mark & wrap rows.\nDON'T wire yet."]
+        wireRows [label="Wire rows to diodes.\nDON'T connect to MCU yet."]
+        wireColumns [label="Wire columns.\nDON'T connect to MCU yet."]
+        wireMCU [label="Wire MCU to rows & columns with reset button facing base plate.\nUse insulated wire."]
+        wireTRRS [label="Wire TRRS jacks to MCU.\nUse insulated wire."]
+        wireColumns->diodes->wrapRows->wireRows->wireMCU
     }
     wireMCU->glueJacks->wireTRRS
     connect_islands_plate->glueMCU
     connect_islands_plate->glueJacks
-    insert_switches->diodes
+    insert_switches->wireColumns
     wireMCU->wireTRRS
     
     subgraph cluster_init_gluing2
